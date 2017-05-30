@@ -3,6 +3,7 @@ package model;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -26,7 +27,7 @@ import javax.persistence.TemporalType;
 @DiscriminatorColumn(name = "tipo", discriminatorType = STRING, length = 45)
 @NamedQueries({
     @NamedQuery(name = "Funcionarios.findAll", query = "SELECT f FROM Funcionarios f")})
-public class Funcionarios implements Serializable {
+public abstract class Funcionarios implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -45,10 +46,6 @@ public class Funcionarios implements Serializable {
     @Column(name = "data_de_admissao")
     @Temporal(TemporalType.DATE)
     private Date dataDeAdmissao;
-    @Column(name = "horasTrabalhadas")
-    private Integer horasTrabalhadas;
-    @Column(name = "tipo")
-    private String tipo;
     @JoinColumn(name = "cargo_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private Cargos cargoId;
@@ -121,22 +118,6 @@ public class Funcionarios implements Serializable {
         this.dataDeAdmissao = dataDeAdmissao;
     }
 
-    public Integer getHorasTrabalhadas() {
-        return horasTrabalhadas;
-    }
-
-    public void setHorasTrabalhadas(Integer horasTrabalhadas) {
-        this.horasTrabalhadas = horasTrabalhadas;
-    }
-
-    public String getTipo() {
-        return tipo;
-    }
-
-    public void setTipo(String tipo) {
-        this.tipo = tipo;
-    }
-
     public Cargos getCargoId() {
         return cargoId;
     }
@@ -201,9 +182,28 @@ public class Funcionarios implements Serializable {
         return this.getEstadoId().ferias(this);
     }
 
-    public Double calcularSalarioLiquido(){
-        return null;
+    public HashMap<String, Float> getValoresFolha(FolhasDePagamento folhaCorrente){
+        HashMap<String, Float> valoresFolha = new HashMap<String, Float>();
+        Float salarioLiquido, valorDescontado, salarioBruto, valorHorasExtras, salarioLiquidoDescontado;
+        salarioBruto = this.getHorasTrabalhadas() * this.cargoId.getMultiplicadorSalario();
+        valorDescontado = salarioBruto * this.cargoId.getDescontoTipo();
+        valorHorasExtras = (float) this.getHorasTrabalhadas() * folhaCorrente.getHorasExtras();
+        salarioLiquido = salarioBruto + valorHorasExtras;
+        salarioLiquidoDescontado = salarioLiquido - valorDescontado;
+        valoresFolha.put("salarioLiquido", salarioLiquido);
+        valoresFolha.put("salarioBruto", salarioBruto);
+        valoresFolha.put("valorDescontado", valorDescontado);
+        valoresFolha.put("valorHorasExtras", valorHorasExtras);
+        valoresFolha.put("salarioLiquidoDescontado", salarioLiquidoDescontado);
+        return valoresFolha;
     }
+    
+    public void gerarFolhaDePagamento(Impressao impressao){
+        
+    }
+    
+    public abstract Integer getHorasTrabalhadas();
+    
     @Override
     public int hashCode() {
         int hash = 0;
@@ -228,5 +228,7 @@ public class Funcionarios implements Serializable {
     public String toString() {
         return "model.Funcionarios[ id=" + id + " ]";
     }
+    
+    
 
 }
