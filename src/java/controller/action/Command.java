@@ -4,7 +4,7 @@ import java.lang.reflect.InvocationTargetException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public interface ActionController {
+public interface Command {
 
     public void execute(HttpServletRequest request, HttpServletResponse response) throws IllegalAccessException, InvocationTargetException;
 }

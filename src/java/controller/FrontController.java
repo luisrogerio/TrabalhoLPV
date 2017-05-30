@@ -1,7 +1,8 @@
 package controller;
 
-import controller.action.ActionController;
+import controller.action.Command;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
@@ -11,9 +12,9 @@ import javax.servlet.http.HttpServletResponse;
 
 public class FrontController extends HttpServlet {
    
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, InvocationTargetException {
         try {
-            ActionController command = (ActionController) Class.forName("controller.action."+request.getParameter("controller")).newInstance();
+            Command command = (Command) Class.forName("controller.action."+request.getParameter("controller")).newInstance();
             command.execute(request, response);
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(FrontController.class.getName()).log(Level.SEVERE, null, ex);
@@ -36,7 +37,11 @@ public class FrontController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        try {
+            processRequest(request, response);
+        } catch (InvocationTargetException ex) {
+            Logger.getLogger(FrontController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
@@ -50,7 +55,11 @@ public class FrontController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        try {
+            processRequest(request, response);
+        } catch (InvocationTargetException ex) {
+            Logger.getLogger(FrontController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**

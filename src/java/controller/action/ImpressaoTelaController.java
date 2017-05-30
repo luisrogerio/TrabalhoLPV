@@ -2,6 +2,7 @@ package controller.action;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.logging.Level;
@@ -15,14 +16,14 @@ import model.FuncionariosMensalista;
 import model.Impressao;
 import model.dao.FolhasDePagamentoJpaController;
 
-public class ImpressaoTelaController implements ActionController, Impressao {
+public class ImpressaoTelaController implements Command, Impressao {
 
     @Override
-    public void processRequest(HttpServletRequest request, HttpServletResponse response) {
-        
+    public void execute(HttpServletRequest request, HttpServletResponse response) throws IllegalAccessException, InvocationTargetException {
+        System.out.println("Cheguo aqui");
     }
-    
-    public void gerarFolhasDePagamento(HttpServletRequest request, HttpServletResponse response){
+
+    public void gerarFolhasDePagamento(HttpServletRequest request, HttpServletResponse response) {
         request.getParameter("empresaId");
         /* 
          Parte que pega a empresa
@@ -32,11 +33,9 @@ public class ImpressaoTelaController implements ActionController, Impressao {
         /* 
          Parte que imprime os HTML inciais
          */
-        
         /* 
          Itera todos os funcionários da empresa chamando o método imprimir
          */
-        
         /* 
          Parte que imprime os HTML finais
          */

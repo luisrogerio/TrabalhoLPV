@@ -5,10 +5,8 @@
  */
 package controller.action;
 
+import controller.ActionController;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.lang.reflect.Type;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -21,20 +19,14 @@ import model.Operacional;
 import model.Tatico;
 import model.dao.CargosJpaController;
 import model.dao.exceptions.NonexistentEntityException;
-import util.ReflectionMethods;
 
 /**
  *
  * @author luisr
  */
-public class CargosController implements ActionController {
+public class CargosController extends ActionController {
 
-    @Override
-    public void execute(HttpServletRequest request, HttpServletResponse response) throws IllegalAccessException, InvocationTargetException {
-        ReflectionMethods.getMethod(this.getClass(), request.getParameter("method")).invoke(this, request, response);
-    }
-
-    protected void index(HttpServletRequest request, HttpServletResponse response)
+    public void index(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         List<Cargos> cargos = null;
         cargos = CargosJpaController.getInstance().findCargosEntities();
@@ -42,14 +34,14 @@ public class CargosController implements ActionController {
         request.getRequestDispatcher("views/cargos/index.jsp").forward(request, response);
     }
 
-    protected void adicionar(HttpServletRequest request, HttpServletResponse response)
+    public void adicionar(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String tipo = request.getParameter("tipo");
         request.setAttribute("tipo", tipo);
         request.getRequestDispatcher("views/cargos/adicionar.jsp").forward(request, response);
     }
 
-    protected void salvar(HttpServletRequest request, HttpServletResponse response)
+    public void salvar(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, ClassNotFoundException, InstantiationException, IllegalAccessException {
 
         Cargos cargo = null;
@@ -76,7 +68,7 @@ public class CargosController implements ActionController {
         request.getRequestDispatcher("frontController?controller=CargosController&method=index").forward(request, response);
     }
 
-    protected void deletar(HttpServletRequest request, HttpServletResponse response)
+    public void deletar(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         Integer id = Integer.parseInt(request.getParameter("id"));
         try {
