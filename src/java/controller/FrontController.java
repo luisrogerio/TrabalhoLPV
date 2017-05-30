@@ -14,7 +14,7 @@ public class FrontController extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
             ActionController command = (ActionController) Class.forName("controller.action."+request.getParameter("controller")).newInstance();
-            
+            command.execute(request, response);
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(FrontController.class.getName()).log(Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
