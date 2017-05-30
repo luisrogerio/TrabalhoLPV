@@ -19,6 +19,10 @@ public class ImpressaoTelaController implements ActionController, Impressao {
 
     @Override
     public void processRequest(HttpServletRequest request, HttpServletResponse response) {
+        
+    }
+    
+    public void gerarFolhasDePagamento(HttpServletRequest request, HttpServletResponse response){
         request.getParameter("empresaId");
         /* 
          Parte que pega a empresa
@@ -28,9 +32,11 @@ public class ImpressaoTelaController implements ActionController, Impressao {
         /* 
          Parte que imprime os HTML inciais
          */
+        
         /* 
          Itera todos os funcionários da empresa chamando o método imprimir
          */
+        
         /* 
          Parte que imprime os HTML finais
          */
