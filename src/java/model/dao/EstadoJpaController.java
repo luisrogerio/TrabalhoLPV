@@ -26,7 +26,7 @@ import model.dao.exceptions.NonexistentEntityException;
  */
 public class EstadoJpaController implements Serializable {
 
-     private static EstadoJpaController instance = new EstadoJpaController();
+    private static EstadoJpaController instance = new EstadoJpaController();
     private EntityManagerFactory emf = null;
 
     public static EstadoJpaController getInstance() {
@@ -205,5 +205,10 @@ public class EstadoJpaController implements Serializable {
             em.close();
         }
     }
-    
+
+    public Estado findByEstado(String férias) {
+        return this.getEntityManager().createNamedQuery("findByEstado", Estado.class)
+                .setParameter("estado", férias).getSingleResult();
+    }
+
 }

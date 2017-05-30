@@ -4,7 +4,7 @@ import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import model.Estado;
 import model.Funcionarios;
-import model.dao.EstadoFeriasJpaController;
+import model.dao.EstadoJpaController;
 
 @Entity
 @DiscriminatorValue(value = "Férias")
@@ -12,7 +12,7 @@ public class EstadoFerias extends Estado {
 
     @Override
     public String ativo(Funcionarios funcionario) {
-        Estado ativo = EstadoFeriasJpaController.getInstance().findByEstado("Férias");
+        Estado ativo = EstadoJpaController.getInstance().findByEstado("Férias");
         funcionario.setEstadoId(ativo);
         return ativo.getEstado();
     }
@@ -24,7 +24,7 @@ public class EstadoFerias extends Estado {
 
     @Override
     public String ferias(Funcionarios funcionario) {
-        return funcionario.getEstadoId().getEstado();
+        return funcionario.getEstadoId().getMensagem();
     }
 
     @Override

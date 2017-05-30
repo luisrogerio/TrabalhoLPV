@@ -20,7 +20,7 @@
                     <th>Nome</th>
                     <th>Tipo</th>
                     <th>Valor da Hora</th>
-                        <th>Opções</th>
+                    <th>Opções</th>
                 </tr>
             </thead>
             <tbody>
@@ -28,15 +28,15 @@
                     <tr>
                         <td>${cargo.nome}</td>
                         <td>${cargo.tipo}</td>
-                        <td>${cargo.multiplicadorSalario}</td>
+                        <td>R$ ${cargo.multiplicadorSalario}</td>
                         <td><a href="CargosController?metodo=deletar&id=${cargo.id}">Deletar Cargo</a></td>
                     </tr>
                 </c:forEach>
-                    <tr>
-                        <td><a href="CargosController?metodo=adicionarExecutivo">Adicionar Cargo Executivo</a></td>
-                        <td><a href="CargosController?metodo=adicionarTatico">Adicionar Cargo Tático</a></td>
-                        <td><a href="CargosController?metodo=adicionarOperacional">Adicionar Cargo Operacional</a></td>
-                    </tr>
+                <tr>
+                    <td><a href="CargosController?metodo=adicionarExecutivo">Adicionar Cargo Executivo</a></td>
+                    <td><a href="CargosController?metodo=adicionarTatico">Adicionar Cargo Tático</a></td>
+                    <td><a href="CargosController?metodo=adicionarOperacional">Adicionar Cargo Operacional</a></td>
+                </tr>
             </tbody>
         </table>
     </body>

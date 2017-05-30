@@ -4,7 +4,6 @@ import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import model.Estado;
 import model.Funcionarios;
-import model.dao.EstadoAtivoJpaController;
 import model.dao.EstadoJpaController;
 
 @Entity
@@ -13,7 +12,7 @@ public class EstadoLicenca extends Estado{
 
     @Override
     public String ativo(Funcionarios funcionario) {
-        Estado ativo = EstadoAtivoJpaController.getInstance().findByEstado("Ativo");
+        Estado ativo = EstadoJpaController.getInstance().findByEstado("Ativo");
         funcionario.setEstadoId(ativo);
         return ativo.getEstado();
     }
@@ -30,7 +29,7 @@ public class EstadoLicenca extends Estado{
 
     @Override
     public String licenca(Funcionarios funcionario) {
-        return funcionario.getEstadoId().getEstado();
+        return funcionario.getEstadoId().getMensagem();
     }
 
 }

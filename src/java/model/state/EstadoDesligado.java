@@ -16,7 +16,7 @@ public class EstadoDesligado extends Estado {
 
     @Override
     public String desligado(Funcionarios funcionario) {
-        return funcionario.getEstadoId().getEstado();
+        return funcionario.getEstadoId().getMensagem();
     }
 
     @Override

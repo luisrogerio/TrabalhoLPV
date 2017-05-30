@@ -6,8 +6,6 @@
 package controller;
 
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.text.DecimalFormat;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -84,7 +82,7 @@ public class CargosController extends HttpServlet {
             Logger.getLogger(CargosController.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        request.getRequestDispatcher("views/cargos/").forward(request, response);
+        request.getRequestDispatcher("CargosController?metodo=index").forward(request, response);
     }
 
     protected void deletar(HttpServletRequest request, HttpServletResponse response)
@@ -95,7 +93,7 @@ public class CargosController extends HttpServlet {
         } catch (NonexistentEntityException ex) {
             Logger.getLogger(CargosController.class.getName()).log(Level.SEVERE, null, ex);
         }
-        request.getRequestDispatcher("views/cargos/").forward(request, response);
+        request.getRequestDispatcher("CargosController?metodo=index").forward(request, response);
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
