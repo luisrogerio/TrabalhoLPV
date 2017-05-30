@@ -26,7 +26,9 @@ import javax.persistence.TemporalType;
 @Table(name = "funcionarios")
 @DiscriminatorColumn(name = "tipo", discriminatorType = STRING, length = 45)
 @NamedQueries({
-    @NamedQuery(name = "Funcionarios.findAll", query = "SELECT f FROM Funcionarios f")})
+    @NamedQuery(name = "Funcionarios.findAll", query = "SELECT f FROM Funcionarios f"),
+    @NamedQuery(name = "findAllFuncionariosNotDesligado", query = "SELECT f FROM Funcionarios f JOIN f.estadoId e WHERE e.estado != 'Desligado'")
+})
 public abstract class Funcionarios implements Serializable {
 
     private static final long serialVersionUID = 1L;
