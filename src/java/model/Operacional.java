@@ -1,0 +1,31 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package model;
+
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
+
+/**
+ *
+ * @author luisr
+ */
+@Entity
+@DiscriminatorValue(value = "Operacional")
+public class Operacional extends Cargos{
+
+    public Operacional() {
+    }
+
+    public Operacional(String nome, String setor, Float multiplicadorSalario, Float descontosINSS) {
+        super(nome, setor, multiplicadorSalario, descontosINSS, "Operacional");
+    }
+    
+    @Override
+    public Float getDescontoTipo() {
+        return this.getDescontosINSS();
+    }
+    
+}

@@ -1,0 +1,232 @@
+package model;
+
+import java.io.Serializable;
+import java.util.Collection;
+import java.util.Date;
+import javax.persistence.Basic;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.DiscriminatorColumn;
+import static javax.persistence.DiscriminatorType.STRING;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
+@Entity
+@Table(name = "funcionarios")
+@DiscriminatorColumn(name = "tipo", discriminatorType = STRING, length = 45)
+@NamedQueries({
+    @NamedQuery(name = "Funcionarios.findAll", query = "SELECT f FROM Funcionarios f")})
+public class Funcionarios implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Basic(optional = false)
+    @Column(name = "id")
+    private Integer id;
+    @Column(name = "nome")
+    private String nome;
+    @Column(name = "cpf")
+    private String cpf;
+    @Column(name = "email")
+    private String email;
+    @Column(name = "senha")
+    private String senha;
+    @Column(name = "data_de_admissao")
+    @Temporal(TemporalType.DATE)
+    private Date dataDeAdmissao;
+    @Column(name = "horasTrabalhadas")
+    private Integer horasTrabalhadas;
+    @Column(name = "tipo")
+    private String tipo;
+    @JoinColumn(name = "cargo_id", referencedColumnName = "id")
+    @ManyToOne(optional = false)
+    private Cargos cargoId;
+    @JoinColumn(name = "empresa_id", referencedColumnName = "id")
+    @ManyToOne(optional = false)
+    private Empresas empresaId;
+    @JoinColumn(name = "estado_id", referencedColumnName = "id")
+    @ManyToOne(optional = false)
+    private Estado estadoId;
+    @OneToMany(mappedBy = "gerenteId")
+    private Collection<Funcionarios> funcionariosCollection;
+    @JoinColumn(name = "gerente_id", referencedColumnName = "id")
+    @ManyToOne
+    private Funcionarios gerenteId;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "funcionariosId")
+    private Collection<FolhasDePagamento> folhasDePagamentoCollection;
+
+    public Funcionarios() {
+    }
+
+    public Funcionarios(Integer id) {
+        this.id = id;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public String getCpf() {
+        return cpf;
+    }
+
+    public void setCpf(String cpf) {
+        this.cpf = cpf;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getSenha() {
+        return senha;
+    }
+
+    public void setSenha(String senha) {
+        this.senha = senha;
+    }
+
+    public Date getDataDeAdmissao() {
+        return dataDeAdmissao;
+    }
+
+    public void setDataDeAdmissao(Date dataDeAdmissao) {
+        this.dataDeAdmissao = dataDeAdmissao;
+    }
+
+    public Integer getHorasTrabalhadas() {
+        return horasTrabalhadas;
+    }
+
+    public void setHorasTrabalhadas(Integer horasTrabalhadas) {
+        this.horasTrabalhadas = horasTrabalhadas;
+    }
+
+    public String getTipo() {
+        return tipo;
+    }
+
+    public void setTipo(String tipo) {
+        this.tipo = tipo;
+    }
+
+    public Cargos getCargoId() {
+        return cargoId;
+    }
+
+    public void setCargoId(Cargos cargoId) {
+        this.cargoId = cargoId;
+    }
+
+    public Empresas getEmpresaId() {
+        return empresaId;
+    }
+
+    public void setEmpresaId(Empresas empresaId) {
+        this.empresaId = empresaId;
+    }
+
+    public Estado getEstadoId() {
+        return estadoId;
+    }
+
+    public void setEstadoId(Estado estadoId) {
+        this.estadoId = estadoId;
+    }
+
+    public Collection<Funcionarios> getFuncionariosCollection() {
+        return funcionariosCollection;
+    }
+
+    public void setFuncionariosCollection(Collection<Funcionarios> funcionariosCollection) {
+        this.funcionariosCollection = funcionariosCollection;
+    }
+
+    public Funcionarios getGerenteId() {
+        return gerenteId;
+    }
+
+    public void setGerenteId(Funcionarios gerenteId) {
+        this.gerenteId = gerenteId;
+    }
+
+    public Collection<FolhasDePagamento> getFolhasDePagamentoCollection() {
+        return folhasDePagamentoCollection;
+    }
+
+    public void setFolhasDePagamentoCollection(Collection<FolhasDePagamento> folhasDePagamentoCollection) {
+        this.folhasDePagamentoCollection = folhasDePagamentoCollection;
+    }
+
+    public String ativarFuncionario() {
+        return this.getEstadoId().ativo(this);
+    }
+
+    public String desligarFuncionario() {
+        return this.getEstadoId().desligado(this);
+    }
+
+    public String licencaFuncionario() {
+        return this.getEstadoId().licenca(this);
+    }
+
+    public String feriasFuncionario() {
+        return this.getEstadoId().ferias(this);
+    }
+
+    public Double calcularSalarioLiquido(){
+        return null;
+    }
+    @Override
+    public int hashCode() {
+        int hash = 0;
+        hash += (id != null ? id.hashCode() : 0);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        // TODO: Warning - this method won't work in the case the id fields are not set
+        if (!(object instanceof Funcionarios)) {
+            return false;
+        }
+        Funcionarios other = (Funcionarios) object;
+        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return "model.Funcionarios[ id=" + id + " ]";
+    }
+
+}
