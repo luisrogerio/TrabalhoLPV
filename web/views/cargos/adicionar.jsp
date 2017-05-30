@@ -13,7 +13,7 @@
     </head>
     <body>
         <h1>Adicionar novo cargo <c:out>${tipo}</c:out></h1>
-        <form action="CargosController?metodo=salvarCargo" method="POST">
+        <form action="frontController?controller=CargosController&method=salvar" method="POST">
             <table>
                 <tbody>
                     <tr>
