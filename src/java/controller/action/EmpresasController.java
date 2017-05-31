@@ -89,10 +89,12 @@ public class EmpresasController extends ActionController implements Impressao{
          */
         Integer id = Integer.parseInt(request.getParameter("id"));
         //Data aqui
-        String dataNaoFormatada = request.getParameter("mesAno");
-        SimpleDateFormat data = new SimpleDateFormat("mm/yyyy");
+        String mes = request.getParameter("mes");
+        String ano = request.getParameter("ano");
+        SimpleDateFormat dateParser = new SimpleDateFormat("MM/yyyy");
+        Date data = null;
         try {
-            data.parse(dataNaoFormatada);
+            data = dateParser.parse(mes + "/" + ano);
         } catch (ParseException ex) {
             Logger.getLogger(EmpresasController.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -111,7 +113,7 @@ public class EmpresasController extends ActionController implements Impressao{
             /* TODO output your page here. You may use following sample code. */
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Folha de Pagamento - Novembro/2014 - Todos os Funcionários</title>");
+            out.println("<title>Folha de Pagamento - "+ dateParser.format(data)+" - Todos os Funcionários</title>");
             out.println("</head>");
             out.println("<body>");
         } catch (IOException ex) {
@@ -145,6 +147,8 @@ public class EmpresasController extends ActionController implements Impressao{
         valores = funcionario.getValoresFolha(folha);
         Empresas empresa = (Empresas) request.getAttribute("empresa");
 
+        SimpleDateFormat formato = new SimpleDateFormat("MM/yyyy");
+        
         response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = null;
 
@@ -153,7 +157,7 @@ public class EmpresasController extends ActionController implements Impressao{
             /* TODO output your page here. You may use following sample code. */
             out.println("<h1>Empresa "+empresa.getNome()+"</h1>");
             out.println("<h1>CNPJ: "+empresa.getCnpj()+"</h1>");
-            out.println("<h1>Folha Mensal: "+"Novembro/2014"+"</h1>");
+            out.println("<h1>Folha Mensal: "+formato.format(mesAnoDeRefencia)+"</h1>");
             out.println("<hr />");
             out.println("<h1>Trabalhador: " + funcionario.getNome()
                     + " CPF: " + funcionario.getCpf()
