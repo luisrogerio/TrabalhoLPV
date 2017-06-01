@@ -344,4 +344,8 @@ public class FuncionariosJpaController implements Serializable {
     public List<Funcionarios> findAllFuncionariosNotDesligado() {
         return this.getEntityManager().createNamedQuery("findAllFuncionariosNotDesligado", Funcionarios.class).getResultList();
     }
+
+    public List<Funcionarios> findAllGerentes() {
+        return this.getEntityManager().createNamedQuery("findAllGerentes", Funcionarios.class).getResultList();
+    }
 }

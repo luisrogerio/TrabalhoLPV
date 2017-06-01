@@ -5,11 +5,12 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ taglib uri = "http://java.sun.com/jsp/jstl/core" prefix = "c" %>
 <!DOCTYPE html>
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>JSP Page</title>
+        <title>Funcionários</title>
     </head>
     <body>
         <h1>Funcionários</h1>
@@ -31,15 +32,13 @@
                     <td>${funcionario.estadoId.estado}</td>
                     <td>${funcionario.cargoId.nome}</td>
                     <td>
-                        <a href="frontController?controller=CargosController&method=deletar&id=${funcionario.id}">Desligar</a> | 
-                        <a href="frontController?controller=CargosController&method=deletar&id=${funcionario.id}">Visualizar</a>
+                        <a href="frontController?controller=FuncionariosController&method=desligar&id=${funcionario.id}">Desligar</a> | 
+                        <a href="frontController?controller=FuncionariosController&method=editar&acao=Alterar&id=${funcionario.id}">Visualizar</a>
                     </td>
                 </tr>
             </c:forEach>
             <tr>
-                <td><a href="frontController?controller=CargosController&method=adicionar&tipo=Executivo">Contratar Funcionário</a></td>
-                <td><a href="frontController?controller=CargosController&method=adicionar&tipo=Tatico">Adicionar Cargo Tático</a></td>
-                <td><a href="frontController?controller=CargosController&method=adicionar&tipo=Operacional">Adicionar Cargo Operacional</a></td>
+                <td colspan="6"><a href="frontController?controller=FuncionariosController&method=adicionar">Contratar Funcionário</a></td>
             </tr>
         </tbody>
     </table>

@@ -8,6 +8,10 @@ import javax.persistence.Entity;
 @DiscriminatorValue("horista")
 public class FuncionariosHoristas extends Funcionarios {
 
+    public FuncionariosHoristas() {
+        super("horista");
+    }
+
     @Column(name = "horasTrabalhadas")
     private Integer horasTrabalhadas;
 

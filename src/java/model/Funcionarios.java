@@ -27,7 +27,8 @@ import javax.persistence.TemporalType;
 @DiscriminatorColumn(name = "tipo", discriminatorType = STRING, length = 45)
 @NamedQueries({
     @NamedQuery(name = "Funcionarios.findAll", query = "SELECT f FROM Funcionarios f"),
-    @NamedQuery(name = "findAllFuncionariosNotDesligado", query = "SELECT f FROM Funcionarios f JOIN f.estadoId e WHERE e.estado != 'Desligado'")
+    @NamedQuery(name = "findAllFuncionariosNotDesligado", query = "SELECT f FROM Funcionarios f JOIN f.estadoId e WHERE e.estado != 'Desligado'"),
+    @NamedQuery(name = "findAllGerentes", query = "SELECT f FROM Funcionarios f JOIN f.gerenteId g WHERE f.id = g.id")
 })
 public abstract class Funcionarios implements Serializable {
 
@@ -45,6 +46,8 @@ public abstract class Funcionarios implements Serializable {
     private String email;
     @Column(name = "senha")
     private String senha;
+    @Column(name = "tipo")
+    private String tipo;
     @Column(name = "data_de_admissao")
     @Temporal(TemporalType.DATE)
     private Date dataDeAdmissao;
@@ -59,7 +62,7 @@ public abstract class Funcionarios implements Serializable {
     private Estado estadoId;
     @OneToMany(mappedBy = "gerenteId")
     private Collection<Funcionarios> funcionariosCollection;
-    @JoinColumn(name = "gerente_id", referencedColumnName = "id")
+    @JoinColumn(name = "gerente_id", referencedColumnName = "id", nullable = true)
     @ManyToOne
     private Funcionarios gerenteId;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "funcionariosId")
@@ -70,6 +73,10 @@ public abstract class Funcionarios implements Serializable {
 
     public Funcionarios(Integer id) {
         this.id = id;
+    }
+
+    public Funcionarios(String tipo) {
+        this.tipo = tipo;
     }
 
     public Integer getId() {
@@ -144,6 +151,14 @@ public abstract class Funcionarios implements Serializable {
         this.estadoId = estadoId;
     }
 
+    public String getTipo() {
+        return tipo;
+    }
+
+    public void setTipo(String tipo) {
+        this.tipo = tipo;
+    }
+
     public Collection<Funcionarios> getFuncionariosCollection() {
         return funcionariosCollection;
     }
@@ -184,7 +199,7 @@ public abstract class Funcionarios implements Serializable {
         return this.getEstadoId().ferias(this);
     }
 
-    public HashMap<String, Float> getValoresFolha(FolhasDePagamento folhaCorrente){
+    public HashMap<String, Float> getValoresFolha(FolhasDePagamento folhaCorrente) {
         HashMap<String, Float> valoresFolha = new HashMap<String, Float>();
         Float salarioLiquido, valorDescontado, salarioBruto, valorHorasExtras, salarioLiquidoDescontado;
         salarioBruto = this.getHorasTrabalhadas() * this.cargoId.getMultiplicadorSalario();
@@ -199,13 +214,13 @@ public abstract class Funcionarios implements Serializable {
         valoresFolha.put("salarioLiquidoDescontado", salarioLiquidoDescontado);
         return valoresFolha;
     }
-    
-    public void gerarFolhaDePagamento(Impressao impressao){
-        
+
+    public void gerarFolhaDePagamento(Impressao impressao) {
+
     }
-    
+
     public abstract Integer getHorasTrabalhadas();
-    
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -230,7 +245,5 @@ public abstract class Funcionarios implements Serializable {
     public String toString() {
         return "model.Funcionarios[ id=" + id + " ]";
     }
-    
-    
 
 }
