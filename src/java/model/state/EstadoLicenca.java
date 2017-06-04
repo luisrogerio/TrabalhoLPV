@@ -14,7 +14,7 @@ public class EstadoLicenca extends Estado {
     public String ativo(Funcionarios funcionario) {
         Estado ativo = EstadoJpaController.getInstance().findByEstado("Ativo");
         funcionario.setEstadoId(ativo);
-        return ativo.getEstado();
+        return "Agora o funcionário está: " + ativo.getEstado();
     }
 
     @Override

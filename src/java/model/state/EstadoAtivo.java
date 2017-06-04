@@ -19,21 +19,21 @@ public class EstadoAtivo extends Estado {
     public String desligado(Funcionarios funcionario) {
         Estado desligado = EstadoJpaController.getInstance().findByEstado("Desligado");
         funcionario.setEstadoId(desligado);
-        return desligado.getEstado();
+        return "Agora o funcionário está: " + desligado.getEstado();
     }
 
     @Override
     public String ferias(Funcionarios funcionario) {
         Estado ferias = EstadoJpaController.getInstance().findByEstado("Férias");
         funcionario.setEstadoId(ferias);
-        return ferias.getEstado();
+        return "Agora o funcionário está: " + ferias.getEstado();
     }
 
     @Override
     public String licenca(Funcionarios funcionario) {
         Estado licensa = EstadoJpaController.getInstance().findByEstado("Licença");
         funcionario.setEstadoId(licensa);
-        return licensa.getEstado();
+        return "Agora o funcionário está: " + licensa.getEstado();
     }
 
 }

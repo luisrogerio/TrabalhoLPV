@@ -1,11 +1,13 @@
 package util;
 
 import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class ReflectionMethods {
 
+    //O metodo getDeclaredMethods retorna apenas os metodos da classe e não da classe e sub-classe
     public static Method getMethod(Class originClass, String methodName) {
         Class clazz;
         try {
@@ -23,6 +25,5 @@ public class ReflectionMethods {
         }
         return null;
     }
-    
-   
+
 }
