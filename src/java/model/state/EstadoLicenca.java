@@ -8,7 +8,7 @@ import model.dao.EstadoJpaController;
 
 @Entity
 @DiscriminatorValue(value = "Licença")
-public class EstadoLicenca extends Estado{
+public class EstadoLicenca extends Estado {
 
     @Override
     public String ativo(Funcionarios funcionario) {
