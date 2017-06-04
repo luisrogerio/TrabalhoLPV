@@ -13,9 +13,8 @@
         <title>Funcionário</title>
     </head>
     <body>
-        ${dataAdimissao}
         <h1><c:out value="${acao}"></c:out> Funcionário</h1>
-            <form action="frontController?controller=FuncionariosController&method=salvar" method="POST">
+            <form action="frontController?controller=FuncionariosController&method=${method}" method="POST">
                 <table>
                     <tbody>
                         <tr>
@@ -100,7 +99,7 @@
                         </td>
                         <td>
                             <select name="gerente">
-                                <option>----Selecione o gerente----</option>
+                                <option value="0">----Selecione o gerente----</option>
                                 <c:forEach items="${gerentes}" var="gerente">
                                     <option value="${gerente.id}" <c:if test="${funcionario.gerenteId.id eq gerente.id}">selected</c:if> >${gerente.nome}</option>
                                 </c:forEach>
@@ -122,7 +121,7 @@
 
                 </tbody>
             </table>
-            <input type="hidden" name="tipo" value="${tipo}" />
+            <input type="hidden" name="id" value="${funcionario.id}" />
             <input type="submit" value="${acao}" />
         </form>
 

@@ -206,9 +206,9 @@ public class EstadoJpaController implements Serializable {
         }
     }
 
-    public Estado findByEstado(String férias) {
+    public Estado findByEstado(String nomeEstado) {
         return this.getEntityManager().createNamedQuery("findByEstado", Estado.class)
-                .setParameter("estado", férias).getSingleResult();
+                .setParameter("estado", nomeEstado).getSingleResult();
     }
 
 }

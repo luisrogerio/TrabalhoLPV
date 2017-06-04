@@ -14,6 +14,11 @@
     </head>
     <body>
         <h1>Funcionários</h1>
+        <c:if test="${mensagemEstado != null}">
+            <div>
+                <p>${mensagemEstado}</p>
+            </div>
+        </c:if>
         <table border="1">
             <thead>
                 <tr>
@@ -25,22 +30,23 @@
                 </tr>
             </thead>
             <tbody>
-            <c:forEach items="${funcionarios}" var="funcionario">
+                <c:forEach items="${funcionarios}" var="funcionario">
+                    <tr>
+                        <td>${funcionario.nome}</td>
+                        <td>${funcionario.tipo}</td>
+                        <td>${funcionario.estadoId.estado}</td>
+                        <td>${funcionario.cargoId.nome}</td>
+                        <td>
+                            <a href="frontController?controller=FuncionariosController&method=desligar&id=${funcionario.id}">Desligar</a> | 
+                            <a href="frontController?controller=FuncionariosController&method=visualizar&id=${funcionario.id}">Visualizar</a> | 
+                            <a href="frontController?controller=FuncionariosController&method=adicionar&acao=Alterar&id=${funcionario.id}">Editar</a>
+                        </td>
+                    </tr>
+                </c:forEach>
                 <tr>
-                    <td>${funcionario.nome}</td>
-                    <td>${funcionario.tipo}</td>
-                    <td>${funcionario.estadoId.estado}</td>
-                    <td>${funcionario.cargoId.nome}</td>
-                    <td>
-                        <a href="frontController?controller=FuncionariosController&method=desligar&id=${funcionario.id}">Desligar</a> | 
-                        <a href="frontController?controller=FuncionariosController&method=editar&acao=Alterar&id=${funcionario.id}">Visualizar</a>
-                    </td>
+                    <td colspan="6"><a href="frontController?controller=FuncionariosController&method=adicionar&acao=Contratar">Contratar Funcionário</a></td>
                 </tr>
-            </c:forEach>
-            <tr>
-                <td colspan="6"><a href="frontController?controller=FuncionariosController&method=adicionar">Contratar Funcionário</a></td>
-            </tr>
-        </tbody>
-    </table>
-</body>
+            </tbody>
+        </table>
+    </body>
 </html>

@@ -1,9 +1,12 @@
 package model;
 
 import java.io.Serializable;
+import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -220,6 +223,21 @@ public abstract class Funcionarios implements Serializable {
     }
 
     public abstract Integer getHorasTrabalhadas();
+
+    public Method getMethod(String methodName) {
+        Method[] methods;
+        try {
+            methods = Class.forName(this.getClass().getName()).getSuperclass().getDeclaredMethods();
+            for (Method currentMethod : methods) {
+                if (currentMethod.getName().equals(methodName)) {
+                    return currentMethod;
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(Funcionarios.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
 
     @Override
     public int hashCode() {

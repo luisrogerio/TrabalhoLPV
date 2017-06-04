@@ -7,10 +7,13 @@ package controller.action;
 
 import controller.ActionController;
 import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.nio.charset.Charset;
+import java.io.UnsupportedEncodingException;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.logging.Level;
@@ -18,10 +21,9 @@ import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import model.Cargos;
-import model.Estado;
+import static model.Estado_.mensagem;
+import model.FolhasDePagamento;
 import model.Funcionarios;
-import model.FuncionariosMensalista;
 import model.dao.CargosJpaController;
 import model.dao.EmpresasJpaController;
 import model.dao.EstadoJpaController;
@@ -45,16 +47,46 @@ public class FuncionariosController extends ActionController {
 
     public void adicionar(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        request.setAttribute("acao", "Contratar");
+        request.setAttribute("acao", request.getParameter("acao"));
         request.setAttribute("method", "salvar");
         request.setAttribute("cargos", CargosJpaController.getInstance().findCargosEntities());
         request.setAttribute("gerentes", FuncionariosJpaController.getInstance().findFuncionariosEntities());
         request.setAttribute("empresas", EmpresasJpaController.getInstance().findEmpresasEntities());
+        if (request.getParameter("acao").equals("Alterar")) {
+            Funcionarios funcionario;
+            Integer id = Integer.parseInt(request.getParameter("id"));
+            funcionario = FuncionariosJpaController.getInstance().findFuncionarios(id);
+            request.setAttribute("funcionario", funcionario);
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+            request.setAttribute("dataAdimissao", formatter.format(funcionario.getDataDeAdmissao()));
+            request.setAttribute("method", "editar");
+        }
         request.getRequestDispatcher("views/funcionarios/adicionar.jsp").forward(request, response);
     }
 
     public void salvar(HttpServletRequest request, HttpServletResponse response) throws ServletException, ClassNotFoundException,
             InstantiationException, IllegalAccessException, ParseException, IOException {
+
+        FuncionariosJpaController.getInstance().create(this.getFuncionarioFromView(request, response));
+        request.getRequestDispatcher("frontController?controller=FuncionariosController&method=index").forward(request, response);
+    }
+
+    public void editar(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, ClassNotFoundException, ParseException, InstantiationException, IllegalAccessException, NonexistentEntityException, Exception {
+        Funcionarios funcionario;
+        Integer id = Integer.parseInt(request.getParameter("id"));
+        funcionario = this.getFuncionarioFromView(request, response);
+        funcionario.setId(id);
+        if (funcionario.getGerenteId() == null) {
+            funcionario.setFuncionariosCollection(new ArrayList<Funcionarios>());
+        }
+        if (funcionario.getFolhasDePagamentoCollection() == null) {
+            funcionario.setFolhasDePagamentoCollection(new ArrayList<FolhasDePagamento>());
+        }
+        FuncionariosJpaController.getInstance().edit(funcionario);
+        request.getRequestDispatcher("frontController?controller=FuncionariosController&method=index").forward(request, response);
+    }
+
+    private Funcionarios getFuncionarioFromView(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, ClassNotFoundException, ParseException, InstantiationException, IllegalAccessException {
         Funcionarios funcionario;
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 
@@ -73,23 +105,7 @@ public class FuncionariosController extends ActionController {
         estado = new String(estado.getBytes(), "UTF-8");
         funcionario.setEstadoId(EstadoJpaController.getInstance().findByEstado(estado));
         funcionario.setEmpresaId(EmpresasJpaController.getInstance().findEmpresas(Integer.parseInt(request.getParameter("empresa"))));
-        FuncionariosJpaController.getInstance().create(funcionario);
-        request.getRequestDispatcher("frontController?controller=FuncionariosController&method=index").forward(request, response);
-    }
-
-    public void editar(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        Funcionarios funcionario;
-        request.setAttribute("method", "");
-        Integer id = Integer.parseInt(request.getParameter("id"));
-        funcionario = FuncionariosJpaController.getInstance().findFuncionarios(id);
-        request.setAttribute("funcionario", funcionario);
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-        request.setAttribute("dataAdimissao", formatter.format(funcionario.getDataDeAdmissao()));
-        request.setAttribute("acao", request.getParameter("acao"));
-        request.setAttribute("cargos", CargosJpaController.getInstance().findCargosEntities());
-        request.setAttribute("gerentes", FuncionariosJpaController.getInstance().findFuncionariosEntities());
-        request.setAttribute("empresas", EmpresasJpaController.getInstance().findEmpresasEntities());
-        request.getRequestDispatcher("views/funcionarios/adicionar.jsp").forward(request, response);
+        return funcionario;
     }
 
     public void desligar(HttpServletRequest request, HttpServletResponse response)
@@ -106,4 +122,27 @@ public class FuncionariosController extends ActionController {
         request.getRequestDispatcher("frontController?controller=FuncionariosController&method=index").forward(request, response);
     }
 
+    public void visualizar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        Funcionarios funcionario;
+        Integer id = Integer.parseInt(request.getParameter("id"));
+        funcionario = FuncionariosJpaController.getInstance().findFuncionarios(id);
+        request.setAttribute("funcionario", funcionario);
+        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+        request.setAttribute("dataAdimissao", formatter.format(funcionario.getDataDeAdmissao()));
+        request.getRequestDispatcher("views/funcionarios/opcoes.jsp").forward(request, response);
+    }
+
+    public void alterarEstado(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, ServletException, IOException {
+        Funcionarios funcionario;
+        Integer id = Integer.parseInt(request.getParameter("id"));
+        funcionario = FuncionariosJpaController.getInstance().findFuncionarios(id);
+        String estado = request.getParameter("novoEstado");
+        estado = estado.concat("Funcionario");
+        Method metodo = funcionario.getMethod(estado);
+        Parameter[] parametros = metodo.getParameters();
+        String mensagem = (String) metodo.invoke(funcionario, parametros);
+        request.setAttribute("mensagem", mensagem);
+        request.setAttribute("funcionario", funcionario);
+        request.getRequestDispatcher("views/funcionarios/opcoes.jsp").forward(request, response);
+    }
 }
