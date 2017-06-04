@@ -6,7 +6,6 @@ import model.Estado;
 import model.Funcionarios;
 import model.dao.EstadoJpaController;
 
-
 @Entity
 @DiscriminatorValue(value = "Ativo")
 public class EstadoAtivo extends Estado {

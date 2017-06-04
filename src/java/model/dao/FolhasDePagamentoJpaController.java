@@ -6,6 +6,7 @@
 package model.dao;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -155,6 +156,12 @@ public class FolhasDePagamentoJpaController implements Serializable {
         } finally {
             em.close();
         }
+    }
+    
+    public FolhasDePagamento findByMesAnoDeReferencia(Date mesAnoDeReferencia, Integer funcionariosId) {
+        return this.getEntityManager().createNamedQuery("findByMesAnoDeReferencia", FolhasDePagamento.class)
+                .setParameter("mesAnoDeReferencia", mesAnoDeReferencia)
+                .setParameter("funcionariosId", funcionariosId).getSingleResult();
     }
 
     public int getFolhasDePagamentoCount() {

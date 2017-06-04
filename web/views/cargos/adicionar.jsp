@@ -13,7 +13,7 @@
     </head>
     <body>
         <h1>Adicionar novo cargo <c:out>${tipo}</c:out></h1>
-        <form action="CargosController?metodo=salvarCargo" method="POST">
+        <form action="frontController?controller=CargosController&method=salvar" method="POST">
             <table>
                 <tbody>
                     <tr>
@@ -45,7 +45,7 @@
                             <label for="descontoINSS">Taxa do INSS (Escrever em decimal)</label>
                         </td>
                         <td>
-                            <input type="number" name="descontoINSS"/>
+                            <input type="number" name="descontoINSS" step="any" min="0" max="1"/>
                         </td>
                     </tr>
                 </tbody>
