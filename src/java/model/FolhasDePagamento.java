@@ -2,6 +2,7 @@ package model;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Observable;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -15,6 +16,7 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import model.dao.FolhasDePagamentoJpaController;
 
 @Entity
 @Table(name = "folhas_de_pagamento")
@@ -22,7 +24,7 @@ import javax.persistence.TemporalType;
     @NamedQuery(name = "FolhasDePagamento.findAll", query = "SELECT f FROM FolhasDePagamento f"),
     @NamedQuery(name = "findByMesAnoDeReferencia", query = "SELECT f FROM FolhasDePagamento f WHERE f.mesAnoDeReferencia = :mesAnoDeReferencia AND f.funcionariosId = :funcionariosId")
 })
-public class FolhasDePagamento implements Serializable {
+public class FolhasDePagamento extends Observable implements Serializable{
     private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)
@@ -45,6 +47,18 @@ public class FolhasDePagamento implements Serializable {
         this.id = id;
     }
 
+    public FolhasDePagamento(Date mesAnoDeReferencia, Integer horasExtras, Funcionarios funcionariosId) {
+        this.mesAnoDeReferencia = mesAnoDeReferencia;
+        this.horasExtras = horasExtras;
+        this.funcionariosId = funcionariosId;
+    }
+    
+    public void salvar(){
+        setChanged();
+        FolhasDePagamentoJpaController.getInstance().create(this);
+    }
+    
+    
     public Integer getId() {
         return id;
     }
