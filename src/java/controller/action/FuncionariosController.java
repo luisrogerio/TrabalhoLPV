@@ -95,6 +95,7 @@ public class FuncionariosController extends ActionController {
         funcionario.setCpf(request.getParameter("cpf"));
         funcionario.setEmail(request.getParameter("email"));
         funcionario.setNome(request.getParameter("nome"));
+       // funcionario.set
 
         String cargoId = Optional.ofNullable(request.getParameter("cargo")).orElse("0");
         String gerenteId = Optional.ofNullable(request.getParameter("gerente")).orElse("0");
