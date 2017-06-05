@@ -22,7 +22,7 @@ import model.dao.FolhasDePagamentoJpaController;
 @Table(name = "folhas_de_pagamento")
 @NamedQueries({
     @NamedQuery(name = "FolhasDePagamento.findAll", query = "SELECT f FROM FolhasDePagamento f"),
-    @NamedQuery(name = "findByMesAnoDeReferencia", query = "SELECT f FROM FolhasDePagamento f WHERE f.mesAnoDeReferencia = :mesAnoDeReferencia AND f.funcionariosId = :funcionariosId")
+    @NamedQuery(name = "findByMesAnoDeReferencia", query = "SELECT f FROM FolhasDePagamento f WHERE f.mesAnoDeReferencia = :mesAnoDeReferencia AND f.funcionariosId.id = :funcionariosId")
 })
 public class FolhasDePagamento extends Observable implements Serializable{
     private static final long serialVersionUID = 1L;

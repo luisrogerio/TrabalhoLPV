@@ -58,9 +58,9 @@
             <tbody>
                 <c:forEach items="${funcionario.folhasDePagamentoCollection}" var="folha">
                     <tr>
-                        <td><c:if test="${folha.id = funcionario.novaFolha}">Novo* </c:if>${folha.id}</td>
+                        <td><c:if test="${folha.id == funcionario.novaFolha}">Novo* </c:if>${folha.id}</td>
                         <td>${folha.horasExtras} horas</td>
-                        <td><f:formatDate value="${folha.mesAnoDeReferencia}" pattern="MM 'de' yyyy" type="date" ></f:formatDate></td>
+                        <td><f:formatDate value="${folha.mesAnoDeReferencia}" pattern="MMMM 'de' yyyy" type="date" ></f:formatDate></td>
                         <td><a href="frontController?controller=FolhasDePagamentoController&method=gerarFolhaIndividual&id=${folha.id}">Gerar Folha PDF</a></td>
                     </tr>
                 </c:forEach>

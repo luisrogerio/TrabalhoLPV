@@ -58,7 +58,7 @@ public class FolhasDePagamentoController extends ActionController{
         folha = new FolhasDePagamento(data, horasExtras, funcionario);
         folha.addObserver(funcionario);
         folha.salvar();
-        folha.notifyObservers();
+        folha.notifyObservers(funcionarioId);
 
         request.getRequestDispatcher("frontController?controller=FuncionariosController&method=visualizar&id="+funcionarioId).forward(request, response);
     }
@@ -72,7 +72,6 @@ public class FolhasDePagamentoController extends ActionController{
         */
         imprimir(folha, new ImpressaoArquivo(), request, response);
         
-        request.getRequestDispatcher("views/folhasDePagamento/adicionar.jsp").forward(request, response);
     }
     
     public void imprimir(FolhasDePagamento folha, Impressao impressao, HttpServletRequest request, HttpServletResponse response)
