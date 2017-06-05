@@ -8,7 +8,7 @@
     <body>
         <h1>${empresa.nome} - ${empresa.cnpj}</h1>
         <h2>Geração de Folha de Pagamentos dos Funcionários</h2>
-        <form action="frontController?controller=EmpresasController&method=gerarFolhasDePagamento" method="POST">
+        <form action="frontController?controller=EmpresasController&method=gerarFolhasDePagamento&id=${empresa.id}" method="POST">
             <table>
                 <tbody>
                     <tr>
