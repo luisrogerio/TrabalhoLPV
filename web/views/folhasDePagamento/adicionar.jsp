@@ -3,14 +3,22 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Empresas</title>
+        <title>Folha de Pagamento</title>
     </head>
     <body>
-        <h1>${empresa.nome} - ${empresa.cnpj}</h1>
-        <h2>Geração de Folha de Pagamentos dos Funcionários</h2>
-        <form action="frontController?controller=EmpresasController&method=gerarFolhasDePagamento" method="POST">
+        <h1>${funcionario.nome} - Folha de Pagamento</h1>
+        <h2>Forneça os dados desse funcionário e mês referente</h2>
+        <form action="frontController?controller=FolhasDePagamentoController&method=salvarFolha" method="POST">
             <table>
                 <tbody>
+                    <tr>
+                        <td>
+                            <label for="horas_extras">Horas Extras</label>
+                        </td>
+                        <td>
+                            <input type="number" min="0" name="horas_extras"/>
+                        </td>
+                    </tr>
                     <tr>
                         <td>
                             <label for="mes">Mês de Refêrencia</label>
@@ -42,7 +50,7 @@
                     </tr>
                 </tbody>
             </table>
-            <input type="hidden" value="${empresa.id}" name="empresaId"/>
+            <input type="hidden" value="${funcionario.id}" name="funcionarioId"/>
             <input type="submit" value="Salvar" />
         </form>
     </body>

@@ -5,6 +5,8 @@ import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Observable;
+import java.util.Observer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.persistence.Basic;
@@ -24,6 +26,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import model.dao.FuncionariosJpaController;
+import model.dao.exceptions.NonexistentEntityException;
 
 @Entity
 @Table(name = "funcionarios")
@@ -33,7 +37,7 @@ import javax.persistence.TemporalType;
     @NamedQuery(name = "findAllFuncionariosNotDesligado", query = "SELECT f FROM Funcionarios f JOIN f.estadoId e WHERE e.estado != 'Desligado'"),
     @NamedQuery(name = "findAllGerentes", query = "SELECT f FROM Funcionarios f JOIN f.gerenteId g WHERE f.id = g.id")
 })
-public abstract class Funcionarios implements Serializable {
+public abstract class Funcionarios implements Serializable, Observer {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -51,6 +55,8 @@ public abstract class Funcionarios implements Serializable {
     private String senha;
     @Column(name = "tipo")
     private String tipo;
+    @Column(name = "nova_folha")
+    private Integer novaFolha;
     @Column(name = "data_de_admissao")
     @Temporal(TemporalType.DATE)
     private Date dataDeAdmissao;
@@ -262,6 +268,19 @@ public abstract class Funcionarios implements Serializable {
     @Override
     public String toString() {
         return "model.Funcionarios[ id=" + id + " ]";
+    }
+
+    @Override
+    public void update(Observable o, Object arg) {
+        FolhasDePagamento folha = (FolhasDePagamento) o;
+        try {
+            this.novaFolha = folha.getId();
+            FuncionariosJpaController.getInstance().edit(this);
+        } catch (NonexistentEntityException ex) {
+            Logger.getLogger(Funcionarios.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+            Logger.getLogger(Funcionarios.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
 }

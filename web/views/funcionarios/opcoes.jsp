@@ -5,6 +5,8 @@
 --%>
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="f" uri="http://java.sun.com/jsp/jstl/fmt" %>
+
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -30,6 +32,8 @@
             <li>Empresa: ${funcionario.empresaId.nome}</li>
         </ul>
 
+        <a href="frontController?controller=FolhasDePagamentoController&method=adicionarFolha&id=${funcionario.id}">Adicionar Horas Extras</a> <br />
+
         <c:if test="${funcionario.estadoId.estado ne'Férias'}">
             <a href="frontController?controller=FuncionariosController&method=alterarEstado&novoEstado=ferias&id=${funcionario.id}">Colocar funcionario de férias</a>
         </c:if>
@@ -42,5 +46,26 @@
         <c:if test="${funcionario.estadoId.estado ne 'Ativo'}">
             | <a href="frontController?controller=FuncionariosController&method=alterarEstado&novoEstado=ativar&id=${funcionario.id}">Ativar</a> 
         </c:if>
+        <table>
+            <thead>
+                <tr>
+                    <td>Código</td>
+                    <th>Horas Extras</th>
+                    <th>Data de Referência</th>
+                    <th>Opções</th>
+                </tr>
+            </thead>
+            <tbody>
+                <c:forEach items="${funcionario.folhasDePagamentoCollection}" var="folha">
+                    <tr>
+                        <td><c:if test="${folha.id = funcionario.novaFolha}">Novo* </c:if>${folha.id}</td>
+                        <td>${folha.horasExtras} horas</td>
+                        <td><f:formatDate value="${folha.mesAnoDeReferencia}" pattern="MM 'de' yyyy" type="date" ></f:formatDate></td>
+                        <td><a href="frontController?controller=FolhasDePagamentoController&method=gerarFolhaIndividual&id=${folha.id}">Gerar Folha PDF</a></td>
+                    </tr>
+                </c:forEach>
+            </tbody>
+        </table>
+
     </body>
 </html>
