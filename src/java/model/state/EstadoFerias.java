@@ -16,7 +16,7 @@ public class EstadoFerias extends Estado {
 
     @Override
     public String ativo(Funcionarios funcionario) {
-        Estado ativo = EstadoJpaController.getInstance().findByEstado("Férias");
+        Estado ativo = EstadoJpaController.getInstance().findByEstado("Ativo");
         funcionario.setEstadoId(ativo);
         try {
             FuncionariosJpaController.getInstance().edit(funcionario);
