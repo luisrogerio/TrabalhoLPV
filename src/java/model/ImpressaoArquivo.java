@@ -35,7 +35,15 @@ public class ImpressaoArquivo implements Impressao {
         try {
 
             SimpleDateFormat dateParser = new SimpleDateFormat("MM-yyyy");
-            arq = new FileWriter(funcionario.getId() + dateParser.format(mesAnoDeRefencia) + "/folha.txt");
+            String fname = funcionario.getId() + dateParser.format(mesAnoDeRefencia) + "/folha.txt";
+            File file = new File(fname);
+            if (file.exists()) {
+                arq = new FileWriter(file, true);
+            } else {
+                file.mkdirs();
+                file.createNewFile();
+                arq = new FileWriter(file);
+            }
 
             PrintWriter out = new PrintWriter(arq);
             out.println("Empresa " + funcionario.getEmpresaId().getNome());
@@ -64,8 +72,7 @@ public class ImpressaoArquivo implements Impressao {
             out.println("Total de Descontos: " + valores.get("valorDescontado"));
 
             out.println("Líquido ==>" + valores.get("salarioLiquidoDescontado"));
-            
-            File file = new File(funcionario.getId() + dateParser.format(mesAnoDeRefencia) + "/folha.txt");
+
             Path path = file.toPath();
             OutputStream output = response.getOutputStream();
             Files.copy(path, output);

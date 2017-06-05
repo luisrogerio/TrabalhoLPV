@@ -27,7 +27,7 @@
                     <tr>
                         <td>${empresa.nome}</td>
                         <td>${empresa.cnpj}</td>
-                        <td><a href="frontController?controller=EmpresasController&method=deletar&id=${empresa.id}">Deletar Cargo</a></td>
+                        <td><a href="frontController?controller=EmpresasController&method=deletar&id=${empresa.id}">Deletar Empresa</a></td>
                         <td><a href="frontController?controller=EmpresasController&method=pegarMesAno&id=${empresa.id}">Gerar Folhas de Pagamento dos Funcionários</a></td>
                     </tr>
                 </c:forEach>

@@ -273,14 +273,23 @@ public abstract class Funcionarios implements Serializable, Observer {
     @Override
     public void update(Observable o, Object arg) {
         FolhasDePagamento folha = (FolhasDePagamento) o;
+        Funcionarios funcionario = (FuncionariosJpaController.getInstance().findFuncionarios((Integer) arg));
         try {
-            this.novaFolha = folha.getId();
-            FuncionariosJpaController.getInstance().edit(this);
+            funcionario.setNovaFolha(folha.getId());
+            FuncionariosJpaController.getInstance().edit(funcionario);
         } catch (NonexistentEntityException ex) {
             Logger.getLogger(Funcionarios.class.getName()).log(Level.SEVERE, null, ex);
         } catch (Exception ex) {
             Logger.getLogger(Funcionarios.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+
+    public Integer getNovaFolha() {
+        return novaFolha;
+    }
+
+    public void setNovaFolha(Integer novaFolha) {
+        this.novaFolha = novaFolha;
     }
 
 }
