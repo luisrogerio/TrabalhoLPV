@@ -39,6 +39,11 @@ public class Empresas implements Serializable {
         this.id = id;
     }
 
+    public Empresas(String nome, String cnpj) {
+        this.nome = nome;
+        this.cnpj = cnpj;
+    }
+
     public Integer getId() {
         return id;
     }
