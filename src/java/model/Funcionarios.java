@@ -19,6 +19,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -55,8 +56,6 @@ public abstract class Funcionarios implements Serializable, Observer {
     private String senha;
     @Column(name = "tipo")
     private String tipo;
-    @Column(name = "nova_folha")
-    private Integer novaFolha;
     @Column(name = "data_de_admissao")
     @Temporal(TemporalType.DATE)
     private Date dataDeAdmissao;
@@ -76,6 +75,10 @@ public abstract class Funcionarios implements Serializable, Observer {
     private Funcionarios gerenteId;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "funcionariosId")
     private Collection<FolhasDePagamento> folhasDePagamentoCollection;
+    @Column(name = "novas_folhas")
+    private Integer novasFolhas;
+    @ManyToMany(mappedBy = "funcionariosCollection")
+    private Collection<Documentos> documentosCollection;
 
     public Funcionarios() {
     }
@@ -284,12 +287,24 @@ public abstract class Funcionarios implements Serializable, Observer {
         }
     }
 
-    public Integer getNovaFolha() {
-        return novaFolha;
+    public void setNovaFolha(Integer novaFolha) {
+        this.novasFolhas = novaFolha;
     }
 
-    public void setNovaFolha(Integer novaFolha) {
-        this.novaFolha = novaFolha;
+    public Integer getNovasFolhas() {
+        return novasFolhas;
+    }
+
+    public void setNovasFolhas(Integer novasFolhas) {
+        this.novasFolhas = novasFolhas;
+    }
+
+    public Collection<Documentos> getDocumentosCollection() {
+        return documentosCollection;
+    }
+
+    public void setDocumentosCollection(Collection<Documentos> documentosCollection) {
+        this.documentosCollection = documentosCollection;
     }
 
 }

@@ -46,7 +46,7 @@
                             <label for="horasTrabalhadas">Horas Trabalhadas</label>
                         </td>
                         <td>
-                            <input type="number" name="horasTrabalhadas" min="1" value="${funcionario.horasTrabalhadas}"/>
+                            <input type="number" name="horasTrabalhadas" min="1" value="${funcionario.horasTrabalhadas}"/> *Se o funcionario for horista preencher com o horario acordado mensal.
                         </td>
                     </tr>
                     <tr>
@@ -54,7 +54,7 @@
                             <label for="dataAdmissao">Data de Admissão</label>
                         </td>
                         <td>
-                            <input type="date" name="dataAdmissao" max="8" min="8" value="${dataAdimissao}"> *Formata data: 1990-12-01 
+                            <input type="date" name="dataAdmissao" max="8" min="8" value="${dataAdimissao}"> *Formato data: 1990-12-01 
                         </td>
                     </tr>
                     <tr>
