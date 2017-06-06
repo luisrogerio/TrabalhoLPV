@@ -21,11 +21,10 @@ import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import static model.Estado_.mensagem;
 import model.FolhasDePagamento;
+import model.FuncionarioMemento;
 import model.Funcionarios;
 import model.FuncionariosHoristas;
-import model.FuncionariosMensalista;
 import model.dao.CargosJpaController;
 import model.dao.EmpresasJpaController;
 import model.dao.EstadoJpaController;
@@ -39,7 +38,7 @@ import model.state.EstadoDesligado;
  * @author luisr
  */
 public class FuncionariosController extends ActionController {
-
+    
     public void index(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         List<Funcionarios> funcionarios;
         funcionarios = FuncionariosJpaController.getInstance().findAllFuncionariosNotDesligado();
@@ -123,6 +122,7 @@ public class FuncionariosController extends ActionController {
         try {
             funcionario = FuncionariosJpaController.getInstance().findFuncionarios(id);
             funcionario.setEstadoId(new EstadoDesligado());
+            funcionario.saveToMemento();
             FuncionariosJpaController.getInstance().edit(funcionario);
         } catch (NonexistentEntityException ex) {
             Logger.getLogger(FuncionariosJpaController.class.getName()).log(Level.SEVERE, null, ex);
@@ -149,8 +149,17 @@ public class FuncionariosController extends ActionController {
         Method metodo = funcionario.getMethod(estado);
         Parameter[] parametros = metodo.getParameters();
         String mensagem = (String) metodo.invoke(funcionario, parametros);
+        funcionario.saveToMemento();
         request.setAttribute("mensagem", mensagem);
         request.setAttribute("funcionario", funcionario);
+        request.getRequestDispatcher("views/funcionarios/opcoes.jsp").forward(request, response);
+    }
+    
+    public void desfazerEstado(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, ServletException, IOException, Exception {
+        Funcionarios funcionario;
+        Integer id = Integer.parseInt(request.getParameter("id"));
+        funcionario = FuncionariosJpaController.getInstance().findFuncionarios(id);
+        funcionario.restoreFromMemento();
         request.getRequestDispatcher("views/funcionarios/opcoes.jsp").forward(request, response);
     }
 }
