@@ -118,10 +118,11 @@ public class EmpresasController extends ActionController{
         /* 
          Itera todos os funcionários da empresa chamando o método imprimir
          */
-        
         for (Iterator iterator = empresa.getFuncionariosCollection().iterator(); iterator.hasNext();) {
             Funcionarios funcionario = (Funcionarios) iterator.next();
-            imprimir(funcionario, data, request, response, new ImpressaoTela());
+            if(!funcionario.getEstadoId().getEstado().equals("Desligado")){
+                imprimir(funcionario, data, request, response, new ImpressaoTela());
+            }
         }
         
         /* 

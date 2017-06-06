@@ -32,7 +32,6 @@ public class ImpressaoTela implements Impressao{
 
         SimpleDateFormat formato = new SimpleDateFormat("MM/yyyy");
         
-        response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = null;
 
         try {

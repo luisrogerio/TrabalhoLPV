@@ -30,27 +30,28 @@ public class ImpressaoArquivo implements Impressao {
     @Override
     public void imprimir(Funcionarios funcionario, Date mesAnoDeRefencia, HttpServletRequest request, HttpServletResponse response) {
         FileWriter arq;
+        PrintWriter out = null;
         FolhasDePagamento folha = FolhasDePagamentoJpaController.getInstance().findByMesAnoDeReferencia(mesAnoDeRefencia, funcionario.getId());
         HashMap<String, Float> valores = funcionario.getValoresFolha(folha);
         try {
 
             SimpleDateFormat dateParser = new SimpleDateFormat("MM-yyyy");
-            String fname = funcionario.getId() + dateParser.format(mesAnoDeRefencia) + "/folha.txt";
+            String fname = "\\" + funcionario.getId() + dateParser.format(mesAnoDeRefencia) + ".txt";
             File file = new File(fname);
             if (file.exists()) {
                 arq = new FileWriter(file, true);
             } else {
-                file.mkdirs();
                 file.createNewFile();
                 arq = new FileWriter(file);
             }
 
-            PrintWriter out = new PrintWriter(arq);
+            out = new PrintWriter(arq);
             out.println("Empresa " + funcionario.getEmpresaId().getNome());
             out.println("CNPJ: " + funcionario.getEmpresaId().getCnpj() + "\tFolha Mensal: " + dateParser.format(mesAnoDeRefencia));
+            dateParser = new SimpleDateFormat("dd-MM-yyyy");
             out.println("Trabalhador: " + funcionario.getNome()
                     + "\t CPF: " + funcionario.getCpf()
-                    + "\t Admissão: " + funcionario.getDataDeAdmissao());
+                    + "\t Admissão: " + dateParser.format(funcionario.getDataDeAdmissao()));
             out.println("Setor: " + funcionario.getCargoId().getSetor()
                     + "\t Cargo: " + funcionario.getCargoId().getNome());
             out.println("Descrição\t|Referência\t|Proventos\t|Descontos");
@@ -60,24 +61,28 @@ public class ImpressaoArquivo implements Impressao {
                 out.print(funcionario.getHorasTrabalhadas() + " horas\t|");
             }
             if (funcionario instanceof FuncionariosMensalista) {
-                out.print("30 dias\t|");
+                out.print("30 dias\t|R$");
             }
-            out.print(valores.get("salarioBruto") + "\t|\n");
+            out.println(valores.get("salarioBruto") + "\t|");
 
-            out.println("Horas Extras\t|" + folha.getHorasExtras() + "\t|" + valores.get("valorHorasExtras") + "\t|");
+            out.println("Horas Extras\t|" + folha.getHorasExtras() + " horas\t|R$" + valores.get("valorHorasExtras") + "\t|");
 
-            out.println("INSS\t|" + (funcionario.getCargoId().getDescontoTipo()) * 100 + " %\t|\t|" + valores.get("valorDescontado"));
+            out.println("INSS\t\t|" + (funcionario.getCargoId().getDescontoTipo()) * 100 + " %\t|\t\t|R$" + valores.get("valorDescontado"));
 
-            out.println("Total de Proventos: " + valores.get("salarioLiquido"));
-            out.println("Total de Descontos: " + valores.get("valorDescontado"));
+            out.println("Total de Proventos: R$" + valores.get("salarioLiquido"));
+            out.println("Total de Descontos: R$" + valores.get("valorDescontado"));
 
-            out.println("Líquido ==>" + valores.get("salarioLiquidoDescontado"));
+            out.println("Líquido ==>R$" + valores.get("salarioLiquidoDescontado"));
 
             Path path = file.toPath();
             OutputStream output = response.getOutputStream();
             Files.copy(path, output);
         } catch (IOException ex) {
             Logger.getLogger(ImpressaoArquivo.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            if (out != null) {
+                out.close();
+            }
         }
     }
 
