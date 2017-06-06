@@ -21,7 +21,8 @@ import model.dao.exceptions.NonexistentEntityException;
  * @author luisr
  */
 public class CargosJpaController implements Serializable {
- private static CargosJpaController instance = new CargosJpaController();
+
+    private static CargosJpaController instance = new CargosJpaController();
     private EntityManagerFactory emf = null;
 
     public static CargosJpaController getInstance() {
@@ -34,6 +35,7 @@ public class CargosJpaController implements Serializable {
     public EntityManager getEntityManager() {
         return PersistenceUtil.getEntityManager();
     }
+
     public void create(Cargos cargos) {
         EntityManager em = null;
         try {
@@ -137,5 +139,5 @@ public class CargosJpaController implements Serializable {
             em.close();
         }
     }
-    
+
 }

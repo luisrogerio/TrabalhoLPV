@@ -13,6 +13,7 @@
     <class>model.Operacional</class>
     <class>model.Tatico</class>
     <class>model.state.EstadoAtivo</class>
+    <class>model.Documentos</class>
     <exclude-unlisted-classes>false</exclude-unlisted-classes>
     <properties>
       <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/pagamentosDB?zeroDateTimeBehavior=convertToNull"/>

@@ -5,24 +5,31 @@
  */
 package model;
 
+import java.io.Serializable;
 import java.util.Collection;
 import javax.persistence.Basic;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
-import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.Table;
 
 /**
  *
  * @author luisr
  */
 @Entity
-@DiscriminatorValue(value = "Executivo")
-public class Executivo extends Cargos{
+@Table(name = "documentos")
+@NamedQueries({
+    @NamedQuery(name = "Documentos.findAll", query = "SELECT d FROM Documentos d")})
+public class Documentos implements Serializable {
+    private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
@@ -30,31 +37,18 @@ public class Executivo extends Cargos{
     private Integer id;
     @Column(name = "nome")
     private String nome;
-    @Column(name = "setor")
-    private String setor;
-    // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
-    @Column(name = "multiplicadorSalario")
-    private Float multiplicadorSalario;
-    @Column(name = "descontosINSS")
-    private Float descontosINSS;
-    @Column(name = "tipo")
-    private String tipo;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "cargoId")
+    @Column(name = "descricao")
+    private String descricao;
+    @JoinTable(name = "documentos_funcionarios", joinColumns = {
+        @JoinColumn(name = "documentos_id", referencedColumnName = "id")}, inverseJoinColumns = {
+        @JoinColumn(name = "funcionarios_id", referencedColumnName = "id")})
+    @ManyToMany
     private Collection<Funcionarios> funcionariosCollection;
 
-    public Executivo() {
+    public Documentos() {
     }
 
-    public Executivo(String nome, String setor, Float multiplicadorSalario, Float descontosINSS) {
-        super(nome, setor, multiplicadorSalario, descontosINSS, "Executivo");
-    }
-    
-    @Override
-    public Float getDescontoTipo() {
-        return 3 * this.getDescontosINSS();
-    }
-
-    public Executivo(Integer id) {
+    public Documentos(Integer id) {
         this.id = id;
     }
 
@@ -74,36 +68,12 @@ public class Executivo extends Cargos{
         this.nome = nome;
     }
 
-    public String getSetor() {
-        return setor;
+    public String getDescricao() {
+        return descricao;
     }
 
-    public void setSetor(String setor) {
-        this.setor = setor;
-    }
-
-    public Float getMultiplicadorSalario() {
-        return multiplicadorSalario;
-    }
-
-    public void setMultiplicadorSalario(Float multiplicadorSalario) {
-        this.multiplicadorSalario = multiplicadorSalario;
-    }
-
-    public Float getDescontosINSS() {
-        return descontosINSS;
-    }
-
-    public void setDescontosINSS(Float descontosINSS) {
-        this.descontosINSS = descontosINSS;
-    }
-
-    public String getTipo() {
-        return tipo;
-    }
-
-    public void setTipo(String tipo) {
-        this.tipo = tipo;
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
     }
 
     public Collection<Funcionarios> getFuncionariosCollection() {
@@ -124,10 +94,10 @@ public class Executivo extends Cargos{
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Executivo)) {
+        if (!(object instanceof Documentos)) {
             return false;
         }
-        Executivo other = (Executivo) object;
+        Documentos other = (Documentos) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -136,7 +106,7 @@ public class Executivo extends Cargos{
 
     @Override
     public String toString() {
-        return "model.Executivo[ id=" + id + " ]";
+        return "model.Documentos[ id=" + id + " ]";
     }
     
 }

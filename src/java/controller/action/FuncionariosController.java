@@ -24,6 +24,8 @@ import javax.servlet.http.HttpServletResponse;
 import static model.Estado_.mensagem;
 import model.FolhasDePagamento;
 import model.Funcionarios;
+import model.FuncionariosHoristas;
+import model.FuncionariosMensalista;
 import model.dao.CargosJpaController;
 import model.dao.EmpresasJpaController;
 import model.dao.EstadoJpaController;
@@ -87,14 +89,14 @@ public class FuncionariosController extends ActionController {
     }
 
     private Funcionarios getFuncionarioFromView(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, ClassNotFoundException, ParseException, InstantiationException, IllegalAccessException {
-        Funcionarios funcionario;
+        Funcionarios funcionario = null;
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 
-        funcionario = (Funcionarios) Class.forName("model." + request.getParameter("tipo")).newInstance();
         funcionario.setDataDeAdmissao(formatter.parse(request.getParameter("dataAdmissao")));
         funcionario.setCpf(request.getParameter("cpf"));
         funcionario.setEmail(request.getParameter("email"));
         funcionario.setNome(request.getParameter("nome"));
+        funcionario.setNovaFolha(0);
 
         String cargoId = Optional.ofNullable(request.getParameter("cargo")).orElse("0");
         String gerenteId = Optional.ofNullable(request.getParameter("gerente")).orElse("0");
@@ -105,6 +107,12 @@ public class FuncionariosController extends ActionController {
         estado = new String(estado.getBytes(), "UTF-8");
         funcionario.setEstadoId(EstadoJpaController.getInstance().findByEstado(estado));
         funcionario.setEmpresaId(EmpresasJpaController.getInstance().findEmpresas(Integer.parseInt(request.getParameter("empresa"))));
+        if (request.getParameter("tipo").equals("FuncionariosHoristas")) {
+            FuncionariosHoristas funcionarioHorista = new FuncionariosHoristas();
+            funcionarioHorista.setHorasTrabalhadas(Integer.parseInt(request.getParameter("horasTrabalhadas")));
+            funcionarioHorista = (FuncionariosHoristas) funcionario;
+            return funcionarioHorista;
+        }
         return funcionario;
     }
 
