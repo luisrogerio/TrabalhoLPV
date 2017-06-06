@@ -54,7 +54,7 @@
                             <label for="dataAdmissao">Data de Admissão</label>
                         </td>
                         <td>
-                            <input type="date" name="dataAdmissao" max="8" min="8" value="${dataAdimissao}"> *Formato data: 1990-12-01 
+                            <input type="text" name="dataAdmissao" max="8" min="8" value="${dataAdimissao}"> *Formato data: 1990-12-01 
                         </td>
                     </tr>
                     <tr>
