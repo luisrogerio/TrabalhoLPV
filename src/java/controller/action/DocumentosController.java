@@ -57,7 +57,7 @@ public class DocumentosController extends ActionController {
             Funcionarios funcionario = funcionarios.get(0);
             mensagem = "O documento " + StringUtils.capitalize(documento.getNome()) + " foi assinado por " + StringUtils.capitalize(funcionario.getNome()) + " do " + StringUtils.capitalize(funcionario.getCargoId().getNome())+".";
         } else {
-            mensagem = "Não existe funcionário responsavel por assinar este documento.";
+            mensagem = "Não existe funcionário responsável por assinar este documento.";
         }
         request.setAttribute("mensagem", mensagem);
         request.getRequestDispatcher("frontController?controller=DocumentosController&method=index").forward(request, response);
