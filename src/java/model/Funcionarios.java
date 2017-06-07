@@ -28,6 +28,7 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import model.dao.FuncionariosJpaController;
+import model.dao.exceptions.IllegalOrphanException;
 import model.dao.exceptions.NonexistentEntityException;
 
 @Entity
@@ -305,6 +306,15 @@ public abstract class Funcionarios implements Serializable, Observer {
 
     public void setDocumentosCollection(Collection<Documentos> documentosCollection) {
         this.documentosCollection = documentosCollection;
+    }
+    
+    public void saveToMemento(){
+        FuncionarioMemento.getInstance().setFuncionarioEstado(this.estadoId);
+    }
+    
+    public void restoreFromMemento() throws NonexistentEntityException, Exception{
+        estadoId = FuncionarioMemento.getInstance().getFuncionarioEstado();
+        FuncionariosJpaController.getInstance().edit(this);
     }
 
 }
