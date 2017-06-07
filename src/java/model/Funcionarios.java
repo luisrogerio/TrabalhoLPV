@@ -77,7 +77,7 @@ public abstract class Funcionarios implements Serializable, Observer {
     private Collection<FolhasDePagamento> folhasDePagamentoCollection;
     @Column(name = "novas_folhas")
     private Integer novasFolhas;
-    @ManyToMany(mappedBy = "funcionariosCollection")
+    @ManyToMany(mappedBy = "funcionariosCollection", cascade = CascadeType.REFRESH, targetEntity = Documentos.class)
     private Collection<Documentos> documentosCollection;
 
     public Funcionarios() {

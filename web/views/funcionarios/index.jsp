@@ -39,13 +39,16 @@
                         <td>
                             <a href="frontController?controller=FuncionariosController&method=desligar&id=${funcionario.id}">Desligar</a> | 
                             <a href="frontController?controller=FuncionariosController&method=visualizar&id=${funcionario.id}">Visualizar</a> | 
-                            <a href="frontController?controller=FuncionariosController&method=adicionar&acao=Alterar&id=${funcionario.id}">Editar</a>
+                            <a href="frontController?controller=FuncionariosController&method=adicionar&acao=Alterar&id=${funcionario.id}">Editar</a> |
+                            <a href="frontController?controller=FuncionariosController&method=callAssociarResponsabilidade&id=${funcionario.id}">Delegar Responsabilidade</a> 
                         </td>
                     </tr>
                 </c:forEach>
                 <tr>
-                    <td colspan="6"><a href="frontController?controller=FuncionariosController&method=adicionar&acao=Contratar">Contratar Funcionário</a></td>
+                    <td colspan="4"><a href="frontController?controller=FuncionariosController&method=adicionar&acao=Contratar">Contratar Funcionário</a></td>
+                    <td ><a href="frontController?controller=FuncionariosController&method=listar">Listar Responsabilidades</a></td>
                 </tr>
+                
             </tbody>
         </table>
     </body>

@@ -5,6 +5,7 @@
  */
 package controller.action;
 
+import com.sun.xml.internal.ws.util.StringUtils;
 import controller.ActionController;
 import java.io.IOException;
 import java.util.List;
@@ -12,7 +13,9 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import model.Documentos;
+import model.Funcionarios;
 import model.dao.DocumentosJpaController;
+import model.dao.exceptions.NonexistentEntityException;
 
 /**
  *
@@ -40,4 +43,23 @@ public class DocumentosController extends ActionController {
         request.getRequestDispatcher("views/documentos/adicionar.jsp").forward(request, response);
     }
 
+    public void deletar(HttpServletRequest request, HttpServletResponse response) throws NonexistentEntityException, ServletException, IOException {
+        DocumentosJpaController.getInstance().destroy(Integer.parseInt(request.getParameter("id")));
+        request.getRequestDispatcher("frontController?controller=DocumentosController&method=index").forward(request, response);
+    }
+
+    public void assinar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String mensagem;
+        int id = Integer.parseInt(request.getParameter("id"));
+        Documentos documento = DocumentosJpaController.getInstance().findDocumentos(id);
+        List<Funcionarios> funcionarios = (List<Funcionarios>) documento.getFuncionariosCollection();
+        if (!funcionarios.isEmpty()) {
+            Funcionarios funcionario = funcionarios.get(0);
+            mensagem = "O documento " + StringUtils.capitalize(documento.getNome()) + " foi assinado por " + StringUtils.capitalize(funcionario.getNome()) + " do " + StringUtils.capitalize(funcionario.getCargoId().getNome())+".";
+        } else {
+            mensagem = "Não existe funcionário responsavel por assinar este documento.";
+        }
+        request.setAttribute("mensagem", mensagem);
+        request.getRequestDispatcher("frontController?controller=DocumentosController&method=index").forward(request, response);
+    }
 }

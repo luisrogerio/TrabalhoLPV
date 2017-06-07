@@ -29,7 +29,7 @@
                             <label for="setor">Descrição</label>
                         </td>
                         <td>
-                            <input type="text" name="descricao"/>
+                            <textarea name="descricao" rows="4" cols="50"></textarea>
                         </td>
                     </tr>
                 </tbody>

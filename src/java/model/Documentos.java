@@ -8,6 +8,7 @@ package model;
 import java.io.Serializable;
 import java.util.Collection;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -42,7 +43,7 @@ public class Documentos implements Serializable {
     @JoinTable(name = "documentos_funcionarios", joinColumns = {
         @JoinColumn(name = "documentos_id", referencedColumnName = "id")}, inverseJoinColumns = {
         @JoinColumn(name = "funcionarios_id", referencedColumnName = "id")})
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.REFRESH, targetEntity = Funcionarios.class)
     private Collection<Funcionarios> funcionariosCollection;
 
     public Documentos() {

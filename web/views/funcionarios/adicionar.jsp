@@ -54,7 +54,7 @@
                             <label for="dataAdmissao">Data de Admissão</label>
                         </td>
                         <td>
-                            <input type="date" name="dataAdmissao" max="8" min="8" value="${dataAdimissao}"> *Formato data: 1990-12-01 
+                            <input type="date" name="dataAdmissao" value="${dataAdimissao}"> *Formato data: 1990-12-01 
                         </td>
                     </tr>
                     <tr>
@@ -74,8 +74,8 @@
                             </td>
                             <td>
                                 <select name="estado">
-                                    <option value="Férias" <c:if test="${funcionario.estadoId.estado eq 'Férias'}">selected</c:if>>Férias</option>
                                 <option value="Ativo" <c:if test="${funcionario.estadoId.estado eq 'Ativo'}">selected</c:if>>Ativo</option>
+                                    <option value="Férias" <c:if test="${funcionario.estadoId.estado eq 'Férias'}">selected</c:if>>Férias</option>
                                 <option value="Licença" <c:if test="${funcionario.estadoId.estado eq 'Licença'}">selected</c:if>>Licença</option>
                                 <option value="Desligado" <c:if test="${funcionario.estadoId.estado eq 'Desligado'}">selected</c:if>>Desligado</option>
                                 </select>

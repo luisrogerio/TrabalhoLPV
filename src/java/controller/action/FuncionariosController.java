@@ -14,6 +14,7 @@ import java.lang.reflect.Parameter;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.logging.Level;
@@ -21,12 +22,12 @@ import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import static model.Estado_.mensagem;
+import model.Documentos;
 import model.FolhasDePagamento;
 import model.Funcionarios;
 import model.FuncionariosHoristas;
-import model.FuncionariosMensalista;
 import model.dao.CargosJpaController;
+import model.dao.DocumentosJpaController;
 import model.dao.EmpresasJpaController;
 import model.dao.EstadoJpaController;
 import model.dao.FuncionariosJpaController;
@@ -91,8 +92,8 @@ public class FuncionariosController extends ActionController {
     private Funcionarios getFuncionarioFromView(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, ClassNotFoundException, ParseException, InstantiationException, IllegalAccessException {
         Funcionarios funcionario = null;
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-
-        funcionario.setDataDeAdmissao(formatter.parse(request.getParameter("dataAdmissao")));
+        String dt = request.getParameter("dataAdmissao");
+        funcionario.setDataDeAdmissao(formatter.parse(dt));
         funcionario.setCpf(request.getParameter("cpf"));
         funcionario.setEmail(request.getParameter("email"));
         funcionario.setNome(request.getParameter("nome"));
@@ -152,5 +153,46 @@ public class FuncionariosController extends ActionController {
         request.setAttribute("mensagem", mensagem);
         request.setAttribute("funcionario", funcionario);
         request.getRequestDispatcher("views/funcionarios/opcoes.jsp").forward(request, response);
+    }
+
+    public void callAssociarResponsabilidade(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        int id = Integer.parseInt(request.getParameter("id"));
+        Funcionarios funcionario = FuncionariosJpaController.getInstance().findFuncionarios(id);
+        request.setAttribute("funcionario", funcionario);
+        request.setAttribute("documentos", DocumentosJpaController.getInstance().findDocumentosEntities());
+        request.getRequestDispatcher("views/funcionarios/associarDocumentos.jsp").forward(request, response);
+    }
+
+    public void associarResponsabilidades(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, Exception {
+        int id;
+        id = Integer.parseInt(request.getParameter("id"));
+        Funcionarios funcionario = FuncionariosJpaController.getInstance().findFuncionarios(id);
+        ArrayList<Funcionarios> funcionariosCollection = new ArrayList();
+        funcionariosCollection.add(funcionario);
+
+        String[] documentosId = request.getParameterValues("documentos");
+        if (documentosId != null) {
+            ArrayList<String> documentosIdFromView = new ArrayList(Arrays.asList(documentosId));
+
+            Documentos docTemp;
+            for (String docId : documentosIdFromView) {
+                id = Integer.parseInt(docId);
+                docTemp = DocumentosJpaController.getInstance().findDocumentos(id);
+                docTemp.setFuncionariosCollection(funcionariosCollection);
+                DocumentosJpaController.getInstance().edit(docTemp);
+            }
+            request.getRequestDispatcher("frontController?controller=FuncionariosController&method=index").forward(request, response);
+        } else {
+            request.setAttribute("mensagem", "Marque pelo menos uma opção de documento.");
+            request.getRequestDispatcher("frontController?controller=FuncionariosController&"
+                    + "method=callAssociarResponsabilidade&id="
+                    + id).forward(request, response);
+        }
+    }
+
+    public void listar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        List<Funcionarios> funcionarios = FuncionariosJpaController.getInstance().findAllFuncionariosNotDesligado();
+        request.setAttribute("funcionarios", funcionarios);
+        request.getRequestDispatcher("views/funcionarios/listaDocumentos.jsp").forward(request, response);
     }
 }
