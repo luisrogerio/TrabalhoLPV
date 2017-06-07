@@ -16,6 +16,7 @@ public class EstadoFerias extends Estado {
 
     @Override
     public String ativo(Funcionarios funcionario) {
+        funcionario.saveToMemento();
         Estado ativo = EstadoJpaController.getInstance().findByEstado("Ativo");
         funcionario.setEstadoId(ativo);
         try {

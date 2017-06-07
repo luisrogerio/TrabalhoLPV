@@ -138,6 +138,8 @@ public class FuncionariosController extends ActionController {
         Integer id = Integer.parseInt(request.getParameter("id"));
         funcionario = FuncionariosJpaController.getInstance().findFuncionarios(id);
         request.setAttribute("funcionario", funcionario);
+        String ultimoEstado = FuncionarioMemento.getInstance().toString();
+        request.setAttribute("ultimoEstado", ultimoEstado);
         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
         request.setAttribute("dataAdimissao", formatter.format(funcionario.getDataDeAdmissao()));
         request.getRequestDispatcher("views/funcionarios/opcoes.jsp").forward(request, response);
@@ -152,10 +154,9 @@ public class FuncionariosController extends ActionController {
         Method metodo = funcionario.getMethod(estado);
         Parameter[] parametros = metodo.getParameters();
         String mensagem = (String) metodo.invoke(funcionario, parametros);
-        funcionario.saveToMemento();
         request.setAttribute("mensagem", mensagem);
         request.setAttribute("funcionario", funcionario);
-        request.getRequestDispatcher("views/funcionarios/opcoes.jsp").forward(request, response);
+        request.getRequestDispatcher("frontController?controller=FuncionariosController&method=visualizar&id"+funcionario.getId()).forward(request, response);
     }
 
     public void desfazerEstado(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, ServletException, IOException, Exception {
@@ -163,7 +164,8 @@ public class FuncionariosController extends ActionController {
         Integer id = Integer.parseInt(request.getParameter("id"));
         funcionario = FuncionariosJpaController.getInstance().findFuncionarios(id);
         funcionario.restoreFromMemento();
-        request.getRequestDispatcher("views/funcionarios/opcoes.jsp").forward(request, response);
+        request.setAttribute("funcionario", funcionario);
+        request.getRequestDispatcher("frontController?controller=FuncionariosController&method=visualizar&id"+funcionario.getId()).forward(request, response);
     }
 
     public void callAssociarResponsabilidade(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

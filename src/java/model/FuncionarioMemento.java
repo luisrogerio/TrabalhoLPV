@@ -18,7 +18,7 @@ public class FuncionarioMemento {
     private static FuncionarioMemento instance = new FuncionarioMemento();
 
     private FuncionarioMemento() {
-        
+        this.funcionarioEstado = new Stack<Estado>();
     }
 
     public static FuncionarioMemento getInstance() {
@@ -31,6 +31,13 @@ public class FuncionarioMemento {
 
     public void setFuncionarioEstado(Estado funcionarioEstado) {
         FuncionarioMemento.funcionarioEstado.push(funcionarioEstado);
+    }
+    
+    public String toString(){
+        if (FuncionarioMemento.funcionarioEstado.empty()){
+            return "";
+        }
+        return FuncionarioMemento.funcionarioEstado.lastElement().getEstado();
     }
     
 }

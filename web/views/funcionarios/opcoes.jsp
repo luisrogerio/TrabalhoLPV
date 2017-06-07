@@ -33,7 +33,9 @@
         </ul>
 
         <a href="frontController?controller=FolhasDePagamentoController&method=adicionarFolha&id=${funcionario.id}">Adicionar Horas Extras</a> <br />
-        <a href="frontController?controller=FuncionariosController&method=desfazerEstado&id=${funcionario.id}">Desfazer para último estado</a>
+        <c:if test="${not empty ultimoEstado}">
+            <a href="frontController?controller=FuncionariosController&method=desfazerEstado&id=${funcionario.id}">Desfazer para último estado - ${ultimoEstado}</a>
+        </c:if>
         <c:if test="${funcionario.estadoId.estado ne'Férias'}">
             <a href="frontController?controller=FuncionariosController&method=alterarEstado&novoEstado=ferias&id=${funcionario.id}">Colocar funcionario de férias</a>
         </c:if>

@@ -313,7 +313,7 @@ public abstract class Funcionarios implements Serializable, Observer {
     }
     
     public void restoreFromMemento() throws NonexistentEntityException, Exception{
-        estadoId = FuncionarioMemento.getInstance().getFuncionarioEstado();
+        this.estadoId = FuncionarioMemento.getInstance().getFuncionarioEstado();
         FuncionariosJpaController.getInstance().edit(this);
     }
 

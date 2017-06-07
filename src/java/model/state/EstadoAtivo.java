@@ -21,6 +21,7 @@ public class EstadoAtivo extends Estado {
 
     @Override
     public String desligado(Funcionarios funcionario) {
+        funcionario.saveToMemento();
         Estado desligado = EstadoJpaController.getInstance().findByEstado("Desligado");
         funcionario.setEstadoId(desligado);
         try {
@@ -35,6 +36,7 @@ public class EstadoAtivo extends Estado {
 
     @Override
     public String ferias(Funcionarios funcionario) {
+        funcionario.saveToMemento();
         Estado ferias = EstadoJpaController.getInstance().findByEstado("Férias");
         funcionario.setEstadoId(ferias);
         try {
@@ -49,6 +51,7 @@ public class EstadoAtivo extends Estado {
 
     @Override
     public String licenca(Funcionarios funcionario) {
+        funcionario.saveToMemento();
         Estado licensa = EstadoJpaController.getInstance().findByEstado("Licença");
         funcionario.setEstadoId(licensa);
         try {
