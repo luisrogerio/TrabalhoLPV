@@ -13,10 +13,24 @@
         <title>Documentos</title>
     </head>
     <body>       
-        <h1>Lista Documentos</h1>
+        <c:import url="../../menu.jsp" ></c:import>
+            <h1>Lista Documentos</h1>
         <c:if test="${mensagem != null}">
             <div>
                 <p>${mensagem}</p>
+                <ul>
+                    <c:forEach items="${funcionariosResponsaveis}" var="funcionarioR">
+                        <li>Nome: ${funcionarioR.nome} - Cargo: ${funcionarioR.cargoId.nome}</li>
+                        </c:forEach>
+                </ul>
+                <c:if test="${docAssociados != null}">
+                    <p>Documentos que você deve assinar também:</p>
+                    <ul>
+                        <c:forEach items="${docAssociados}" var="docAssociados">
+                            <li>${docAssociados.nome}</li>
+                            </c:forEach>
+                    </ul>
+                </c:if>
             </div>
         </c:if>
         <table border="1">
@@ -34,7 +48,8 @@
                         <td>${documento.descricao}</td>
                         <td>
                             <a href="frontController?controller=DocumentosController&method=deletar&id=${documento.id}">Deletar Documento</a> |
-                            <a href="frontController?controller=DocumentosController&method=assinar&id=${documento.id}">Assinar</a> 
+                            <a href="frontController?controller=DocumentosController&method=assinar&id=${documento.id}">Assinar</a> |
+                            <a href="frontController?controller=DocumentosController&method=callAssociar&id=${documento.id}">Associar Documentos</a> 
                         </td>
                     </tr>
                 </c:forEach>
@@ -43,5 +58,6 @@
                 </tr>
             </tbody>
         </table>
+
     </body>
 </html>

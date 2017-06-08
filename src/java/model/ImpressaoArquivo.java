@@ -10,6 +10,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.text.SimpleDateFormat;
@@ -36,7 +37,9 @@ public class ImpressaoArquivo implements Impressao {
         try {
 
             SimpleDateFormat dateParser = new SimpleDateFormat("MM-yyyy");
-            String fname = "\\" + funcionario.getId() + dateParser.format(mesAnoDeRefencia) + ".txt";
+            String realPath = this.getClass().getClassLoader().getResource("model/ImpressaoArquivo.class").getPath();
+            realPath = realPath.replace("/build/web/WEB-INF/classes/model/ImpressaoArquivo.class", "");
+            String fname = realPath + File.separator + "files" + File.separator + funcionario.getId() + dateParser.format(mesAnoDeRefencia) + ".txt";
             File file = new File(fname);
             if (file.exists()) {
                 arq = new FileWriter(file, true);

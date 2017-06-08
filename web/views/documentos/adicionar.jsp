@@ -12,6 +12,7 @@
         <title>Documentos</title>
     </head>
     <body>
+        <c:import url="../../menu.jsp" ></c:import>
         <h1>Adicione Novos Documentos</h1>
         <form action="frontController?controller=DocumentosController&method=salvar" method="POST">
             <table>

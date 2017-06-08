@@ -6,6 +6,7 @@
         <title>Folha de Pagamento</title>
     </head>
     <body>
+        <c:import url="../../menu.jsp" ></c:import>
         <h1>${funcionario.nome} - Folha de Pagamento</h1>
         <h2>Forneça os dados desse funcionário e mês referente</h2>
         <form action="frontController?controller=FolhasDePagamentoController&method=salvarFolha" method="POST">

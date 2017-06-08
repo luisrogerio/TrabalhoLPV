@@ -13,6 +13,7 @@
         <title>Empresas</title>
     </head>
     <body>
+        <c:import url="../../menu.jsp" ></c:import>
         <h1>Empresas</h1>
         <table border="1">
             <thead>

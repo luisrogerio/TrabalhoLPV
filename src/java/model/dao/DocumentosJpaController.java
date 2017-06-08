@@ -17,6 +17,7 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import model.Documentos;
+import model.dao.exceptions.IllegalOrphanException;
 import model.dao.exceptions.NonexistentEntityException;
 
 /**
@@ -40,6 +41,9 @@ public class DocumentosJpaController implements Serializable {
     }
 
     public void create(Documentos documentos) {
+        if (documentos.getDocumentosCollection() == null) {
+            documentos.setDocumentosCollection(new ArrayList<Documentos>());
+        }
         if (documentos.getFuncionariosCollection() == null) {
             documentos.setFuncionariosCollection(new ArrayList<Funcionarios>());
         }
@@ -47,6 +51,22 @@ public class DocumentosJpaController implements Serializable {
         try {
             em = getEntityManager();
             em.getTransaction().begin();
+            Documentos documentoId = documentos.getDocumentoId();
+            if (documentoId != null) {
+                documentoId = em.getReference(documentoId.getClass(), documentoId.getId());
+                documentos.setDocumentoId(documentoId);
+            }
+            Documentos documentosId = documentos.getDocumentoId();
+            if (documentosId != null) {
+                documentosId = em.getReference(documentosId.getClass(), documentosId.getId());
+                documentos.setDocumentoId(documentosId);
+            }
+            Collection<Documentos> attachedDocumentosCollection = new ArrayList<Documentos>();
+            for (Documentos documentosCollectionDocumentosToAttach : documentos.getDocumentosCollection()) {
+                documentosCollectionDocumentosToAttach = em.getReference(documentosCollectionDocumentosToAttach.getClass(), documentosCollectionDocumentosToAttach.getId());
+                attachedDocumentosCollection.add(documentosCollectionDocumentosToAttach);
+            }
+            documentos.setDocumentosCollection(attachedDocumentosCollection);
             Collection<Funcionarios> attachedFuncionariosCollection = new ArrayList<Funcionarios>();
             for (Funcionarios funcionariosCollectionFuncionariosToAttach : documentos.getFuncionariosCollection()) {
                 funcionariosCollectionFuncionariosToAttach = em.getReference(funcionariosCollectionFuncionariosToAttach.getClass(), funcionariosCollectionFuncionariosToAttach.getId());
@@ -54,6 +74,23 @@ public class DocumentosJpaController implements Serializable {
             }
             documentos.setFuncionariosCollection(attachedFuncionariosCollection);
             em.persist(documentos);
+            if (documentoId != null) {
+                documentoId.getDocumentosCollection().add(documentos);
+                documentoId = em.merge(documentoId);
+            }
+            if (documentosId != null) {
+                documentosId.getDocumentosCollection().add(documentos);
+                documentosId = em.merge(documentosId);
+            }
+            for (Documentos documentosCollectionDocumentos : documentos.getDocumentosCollection()) {
+                Documentos oldDocumentoIdOfDocumentosCollectionDocumentos = documentosCollectionDocumentos.getDocumentoId();
+                documentosCollectionDocumentos.setDocumentoId(documentos);
+                documentosCollectionDocumentos = em.merge(documentosCollectionDocumentos);
+                if (oldDocumentoIdOfDocumentosCollectionDocumentos != null) {
+                    oldDocumentoIdOfDocumentosCollectionDocumentos.getDocumentosCollection().remove(documentosCollectionDocumentos);
+                    oldDocumentoIdOfDocumentosCollectionDocumentos = em.merge(oldDocumentoIdOfDocumentosCollectionDocumentos);
+                }
+            }
             for (Funcionarios funcionariosCollectionFuncionarios : documentos.getFuncionariosCollection()) {
                 funcionariosCollectionFuncionarios.getDocumentosCollection().add(documentos);
                 funcionariosCollectionFuncionarios = em.merge(funcionariosCollectionFuncionarios);
@@ -66,14 +103,47 @@ public class DocumentosJpaController implements Serializable {
         }
     }
 
-    public void edit(Documentos documentos) throws NonexistentEntityException, Exception {
+    public void edit(Documentos documentos) throws IllegalOrphanException, NonexistentEntityException, Exception {
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
             Documentos persistentDocumentos = em.find(Documentos.class, documentos.getId());
+            Documentos documentoIdOld = persistentDocumentos.getDocumentoId();
+            Documentos documentoIdNew = documentos.getDocumentoId();
+            Documentos documentosIdOld = persistentDocumentos.getDocumentoId();
+            Documentos documentosIdNew = documentos.getDocumentoId();
+            Collection<Documentos> documentosCollectionOld = persistentDocumentos.getDocumentosCollection();
+            Collection<Documentos> documentosCollectionNew = documentos.getDocumentosCollection();
             Collection<Funcionarios> funcionariosCollectionOld = persistentDocumentos.getFuncionariosCollection();
             Collection<Funcionarios> funcionariosCollectionNew = documentos.getFuncionariosCollection();
+            List<String> illegalOrphanMessages = null;
+            for (Documentos documentosCollectionOldDocumentos : documentosCollectionOld) {
+                if (!documentosCollectionNew.contains(documentosCollectionOldDocumentos)) {
+                    if (illegalOrphanMessages == null) {
+                        illegalOrphanMessages = new ArrayList<String>();
+                    }
+                    illegalOrphanMessages.add("You must retain Documentos " + documentosCollectionOldDocumentos + " since its documentoId field is not nullable.");
+                }
+            }
+            if (illegalOrphanMessages != null) {
+                throw new IllegalOrphanException(illegalOrphanMessages);
+            }
+            if (documentoIdNew != null) {
+                documentoIdNew = em.getReference(documentoIdNew.getClass(), documentoIdNew.getId());
+                documentos.setDocumentoId(documentoIdNew);
+            }
+            if (documentosIdNew != null) {
+                documentosIdNew = em.getReference(documentosIdNew.getClass(), documentosIdNew.getId());
+                documentos.setDocumentoId(documentosIdNew);
+            }
+            Collection<Documentos> attachedDocumentosCollectionNew = new ArrayList<Documentos>();
+            for (Documentos documentosCollectionNewDocumentosToAttach : documentosCollectionNew) {
+                documentosCollectionNewDocumentosToAttach = em.getReference(documentosCollectionNewDocumentosToAttach.getClass(), documentosCollectionNewDocumentosToAttach.getId());
+                attachedDocumentosCollectionNew.add(documentosCollectionNewDocumentosToAttach);
+            }
+            documentosCollectionNew = attachedDocumentosCollectionNew;
+            documentos.setDocumentosCollection(documentosCollectionNew);
             Collection<Funcionarios> attachedFuncionariosCollectionNew = new ArrayList<Funcionarios>();
             for (Funcionarios funcionariosCollectionNewFuncionariosToAttach : funcionariosCollectionNew) {
                 funcionariosCollectionNewFuncionariosToAttach = em.getReference(funcionariosCollectionNewFuncionariosToAttach.getClass(), funcionariosCollectionNewFuncionariosToAttach.getId());
@@ -82,6 +152,33 @@ public class DocumentosJpaController implements Serializable {
             funcionariosCollectionNew = attachedFuncionariosCollectionNew;
             documentos.setFuncionariosCollection(funcionariosCollectionNew);
             documentos = em.merge(documentos);
+            if (documentoIdOld != null && !documentoIdOld.equals(documentoIdNew)) {
+                documentoIdOld.getDocumentosCollection().remove(documentos);
+                documentoIdOld = em.merge(documentoIdOld);
+            }
+            if (documentoIdNew != null && !documentoIdNew.equals(documentoIdOld)) {
+                documentoIdNew.getDocumentosCollection().add(documentos);
+                documentoIdNew = em.merge(documentoIdNew);
+            }
+            if (documentosIdOld != null && !documentosIdOld.equals(documentosIdNew)) {
+                documentosIdOld.getDocumentosCollection().remove(documentos);
+                documentosIdOld = em.merge(documentosIdOld);
+            }
+            if (documentosIdNew != null && !documentosIdNew.equals(documentosIdOld)) {
+                documentosIdNew.getDocumentosCollection().add(documentos);
+                documentosIdNew = em.merge(documentosIdNew);
+            }
+            for (Documentos documentosCollectionNewDocumentos : documentosCollectionNew) {
+                if (!documentosCollectionOld.contains(documentosCollectionNewDocumentos)) {
+                    Documentos oldDocumentoIdOfDocumentosCollectionNewDocumentos = documentosCollectionNewDocumentos.getDocumentoId();
+                    documentosCollectionNewDocumentos.setDocumentoId(documentos);
+                    documentosCollectionNewDocumentos = em.merge(documentosCollectionNewDocumentos);
+                    if (oldDocumentoIdOfDocumentosCollectionNewDocumentos != null && !oldDocumentoIdOfDocumentosCollectionNewDocumentos.equals(documentos)) {
+                        oldDocumentoIdOfDocumentosCollectionNewDocumentos.getDocumentosCollection().remove(documentosCollectionNewDocumentos);
+                        oldDocumentoIdOfDocumentosCollectionNewDocumentos = em.merge(oldDocumentoIdOfDocumentosCollectionNewDocumentos);
+                    }
+                }
+            }
             for (Funcionarios funcionariosCollectionOldFuncionarios : funcionariosCollectionOld) {
                 if (!funcionariosCollectionNew.contains(funcionariosCollectionOldFuncionarios)) {
                     funcionariosCollectionOldFuncionarios.getDocumentosCollection().remove(documentos);
@@ -111,7 +208,7 @@ public class DocumentosJpaController implements Serializable {
         }
     }
 
-    public void destroy(Integer id) throws NonexistentEntityException {
+    public void destroy(Integer id) throws IllegalOrphanException, NonexistentEntityException {
         EntityManager em = null;
         try {
             em = getEntityManager();
@@ -122,6 +219,27 @@ public class DocumentosJpaController implements Serializable {
                 documentos.getId();
             } catch (EntityNotFoundException enfe) {
                 throw new NonexistentEntityException("The documentos with id " + id + " no longer exists.", enfe);
+            }
+            List<String> illegalOrphanMessages = null;
+            Collection<Documentos> documentosCollectionOrphanCheck = documentos.getDocumentosCollection();
+            for (Documentos documentosCollectionOrphanCheckDocumentos : documentosCollectionOrphanCheck) {
+                if (illegalOrphanMessages == null) {
+                    illegalOrphanMessages = new ArrayList<String>();
+                }
+                illegalOrphanMessages.add("This Documentos (" + documentos + ") cannot be destroyed since the Documentos " + documentosCollectionOrphanCheckDocumentos + " in its documentosCollection field has a non-nullable documentoId field.");
+            }
+            if (illegalOrphanMessages != null) {
+                throw new IllegalOrphanException(illegalOrphanMessages);
+            }
+            Documentos documentoId = documentos.getDocumentoId();
+            if (documentoId != null) {
+                documentoId.getDocumentosCollection().remove(documentos);
+                documentoId = em.merge(documentoId);
+            }
+            Documentos documentosId = documentos.getDocumentoId();
+            if (documentosId != null) {
+                documentosId.getDocumentosCollection().remove(documentos);
+                documentosId = em.merge(documentosId);
             }
             Collection<Funcionarios> funcionariosCollection = documentos.getFuncionariosCollection();
             for (Funcionarios funcionariosCollectionFuncionarios : funcionariosCollection) {
@@ -183,4 +301,7 @@ public class DocumentosJpaController implements Serializable {
         }
     }
 
+    public List<Documentos> findAllNotMyself(int id) {
+        return this.getEntityManager().createNamedQuery("findAllNotMyself", Documentos.class).setParameter("id", id).getResultList();
+    }
 }

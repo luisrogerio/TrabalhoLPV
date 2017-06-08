@@ -28,7 +28,6 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import model.dao.FuncionariosJpaController;
-import model.dao.exceptions.IllegalOrphanException;
 import model.dao.exceptions.NonexistentEntityException;
 
 @Entity

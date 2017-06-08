@@ -6,6 +6,7 @@
         <title>Empresas</title>
     </head>
     <body>
+        <c:import url="../../menu.jsp" ></c:import>
         <h1>${empresa.nome} - ${empresa.cnpj}</h1>
         <h2>Geração de Folha de Pagamentos dos Funcionários</h2>
         <form action="frontController?controller=EmpresasController&method=gerarFolhasDePagamento&id=${empresa.id}" method="POST">

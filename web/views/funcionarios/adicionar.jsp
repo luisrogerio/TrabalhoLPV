@@ -13,6 +13,7 @@
         <title>Funcionário</title>
     </head>
     <body>
+        <c:import url="../../menu.jsp" ></c:import>
         <h1><c:out value="${acao}"></c:out> Funcionário</h1>
             <form action="frontController?controller=FuncionariosController&method=${method}" method="POST">
                 <table>
@@ -54,7 +55,7 @@
                             <label for="dataAdmissao">Data de Admissão</label>
                         </td>
                         <td>
-                            <input type="text" name="dataAdmissao" max="8" min="8" value="${dataAdimissao}"> *Formato data: 1990-12-01 
+                            <input type="date" name="dataAdmissao" max="8" min="8" value="${dataAdimissao}">
                         </td>
                     </tr>
                     <tr>

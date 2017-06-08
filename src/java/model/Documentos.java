@@ -17,8 +17,10 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 /**
@@ -28,8 +30,11 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "documentos")
 @NamedQueries({
-    @NamedQuery(name = "Documentos.findAll", query = "SELECT d FROM Documentos d")})
+    @NamedQuery(name = "Documentos.findAll", query = "SELECT d FROM Documentos d"),
+    @NamedQuery(name = "findAllNotMyself", query = "SELECT d FROM Documentos d WHERE d.id != :id")
+})
 public class Documentos implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -45,6 +50,11 @@ public class Documentos implements Serializable {
         @JoinColumn(name = "funcionarios_id", referencedColumnName = "id")})
     @ManyToMany(cascade = CascadeType.REFRESH, targetEntity = Funcionarios.class)
     private Collection<Funcionarios> funcionariosCollection;
+    @OneToMany(cascade = CascadeType.REFRESH, mappedBy = "documentoId")
+    private Collection<Documentos> documentosCollection;
+    @JoinColumn(name = "documentos_id", referencedColumnName = "id")
+    @ManyToOne(optional = false)
+    private Documentos documentoId;
 
     public Documentos() {
     }
@@ -85,6 +95,22 @@ public class Documentos implements Serializable {
         this.funcionariosCollection = funcionariosCollection;
     }
 
+    public Collection<Documentos> getDocumentosCollection() {
+        return documentosCollection;
+    }
+
+    public void setDocumentosCollection(Collection<Documentos> documentosCollection) {
+        this.documentosCollection = documentosCollection;
+    }
+
+    public Documentos getDocumentoId() {
+        return documentoId;
+    }
+
+    public void setDocumentoId(Documentos documentoId) {
+        this.documentoId = documentoId;
+    }
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -109,5 +135,5 @@ public class Documentos implements Serializable {
     public String toString() {
         return "model.Documentos[ id=" + id + " ]";
     }
-    
+
 }

@@ -11,6 +11,7 @@ import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -27,6 +28,7 @@ import model.FolhasDePagamento;
 import model.FuncionarioMemento;
 import model.Funcionarios;
 import model.FuncionariosHoristas;
+import model.FuncionariosMensalista;
 import model.dao.CargosJpaController;
 import model.dao.DocumentosJpaController;
 import model.dao.EmpresasJpaController;
@@ -91,31 +93,41 @@ public class FuncionariosController extends ActionController {
     }
 
     private Funcionarios getFuncionarioFromView(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, ClassNotFoundException, ParseException, InstantiationException, IllegalAccessException {
-        Funcionarios funcionario = null;
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-        String dt = request.getParameter("dataAdmissao");
-        funcionario.setDataDeAdmissao(formatter.parse(dt));
-        funcionario.setCpf(request.getParameter("cpf"));
-        funcionario.setEmail(request.getParameter("email"));
-        funcionario.setNome(request.getParameter("nome"));
-        funcionario.setNovaFolha(0);
-
+        Funcionarios funcionario = new FuncionariosMensalista();
+        DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         String cargoId = Optional.ofNullable(request.getParameter("cargo")).orElse("0");
         String gerenteId = Optional.ofNullable(request.getParameter("gerente")).orElse("0");
-        funcionario.setCargoId(CargosJpaController.getInstance().findCargos(Integer.parseInt(cargoId)));
-        funcionario.setGerenteId(FuncionariosJpaController.getInstance().findFuncionarios(Integer.parseInt(gerenteId)));
-
+        String dt = request.getParameter("dataAdmissao");
         String estado = request.getParameter("estado");
         estado = new String(estado.getBytes(), "UTF-8");
-        funcionario.setEstadoId(EstadoJpaController.getInstance().findByEstado(estado));
-        funcionario.setEmpresaId(EmpresasJpaController.getInstance().findEmpresas(Integer.parseInt(request.getParameter("empresa"))));
+        String cpf = request.getParameter("cpf");
+        String email = request.getParameter("email");
+        String nome = request.getParameter("nome");
         if (request.getParameter("tipo").equals("FuncionariosHoristas")) {
             FuncionariosHoristas funcionarioHorista = new FuncionariosHoristas();
             funcionarioHorista.setHorasTrabalhadas(Integer.parseInt(request.getParameter("horasTrabalhadas")));
-            funcionarioHorista = (FuncionariosHoristas) funcionario;
+            funcionarioHorista.setDataDeAdmissao(formatter.parse(dt));
+            funcionarioHorista.setCpf(cpf);
+            funcionarioHorista.setEmail(email);
+            funcionarioHorista.setNome(nome);
+            funcionarioHorista.setNovaFolha(0);
+            funcionarioHorista.setCargoId(CargosJpaController.getInstance().findCargos(Integer.parseInt(cargoId)));
+            funcionarioHorista.setGerenteId(FuncionariosJpaController.getInstance().findFuncionarios(Integer.parseInt(gerenteId)));
+            funcionarioHorista.setEstadoId(EstadoJpaController.getInstance().findByEstado(estado));
+            funcionarioHorista.setEmpresaId(EmpresasJpaController.getInstance().findEmpresas(Integer.parseInt(request.getParameter("empresa"))));
             return funcionarioHorista;
+        } else {
+            funcionario.setDataDeAdmissao(formatter.parse(dt));
+            funcionario.setCpf(cpf);
+            funcionario.setEmail(email);
+            funcionario.setNome(nome);
+            funcionario.setNovaFolha(0);
+            funcionario.setCargoId(CargosJpaController.getInstance().findCargos(Integer.parseInt(cargoId)));
+            funcionario.setGerenteId(FuncionariosJpaController.getInstance().findFuncionarios(Integer.parseInt(gerenteId)));
+            funcionario.setEstadoId(EstadoJpaController.getInstance().findByEstado(estado));
+            funcionario.setEmpresaId(EmpresasJpaController.getInstance().findEmpresas(Integer.parseInt(request.getParameter("empresa"))));
+            return funcionario;
         }
-        return funcionario;
     }
 
     public void desligar(HttpServletRequest request, HttpServletResponse response)
@@ -156,7 +168,7 @@ public class FuncionariosController extends ActionController {
         String mensagem = (String) metodo.invoke(funcionario, parametros);
         request.setAttribute("mensagem", mensagem);
         request.setAttribute("funcionario", funcionario);
-        request.getRequestDispatcher("frontController?controller=FuncionariosController&method=visualizar&id"+funcionario.getId()).forward(request, response);
+        request.getRequestDispatcher("frontController?controller=FuncionariosController&method=visualizar&id" + funcionario.getId()).forward(request, response);
     }
 
     public void desfazerEstado(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, ServletException, IOException, Exception {
@@ -165,7 +177,7 @@ public class FuncionariosController extends ActionController {
         funcionario = FuncionariosJpaController.getInstance().findFuncionarios(id);
         funcionario.restoreFromMemento();
         request.setAttribute("funcionario", funcionario);
-        request.getRequestDispatcher("frontController?controller=FuncionariosController&method=visualizar&id"+funcionario.getId()).forward(request, response);
+        request.getRequestDispatcher("frontController?controller=FuncionariosController&method=visualizar&id" + funcionario.getId()).forward(request, response);
     }
 
     public void callAssociarResponsabilidade(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

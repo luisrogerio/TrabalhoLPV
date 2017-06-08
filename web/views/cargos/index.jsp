@@ -13,6 +13,7 @@
         <title>Cargos</title>
     </head>
     <body>
+        <c:import url="../../menu.jsp" ></c:import>
         <h1>Cargos e Salários</h1>
         <table border="1">
             <thead>

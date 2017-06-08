@@ -14,16 +14,16 @@
     </head>
     <body>
         <c:import url="../../menu.jsp" ></c:import>
-        <h1>Associe os Documentos ao ${funcionario.nome}</h1>
+        <h1>Associe outros documentos ao ${documento.nome}</h1>
         <c:if test="${mensagem != null}">
             <p style="color: red">${mensagem}</p>
         </c:if>
-        <form action="frontController?controller=FuncionariosController&method=associarResponsabilidades" method="POST">
-            <c:forEach items="${documentos}" var="documento">
-                <input type="checkbox" name="documentos" value="${documento.id}">${documento.nome} 
+        <form action="frontController?controller=DocumentosController&method=associarDocumento" method="POST">
+            <c:forEach items="${allDocumentos}" var="doc">
+                <input type="checkbox" name="documentos" value="${doc.id}">${doc.nome} 
                 <br />
             </c:forEach>
-            <input type="hidden" name="id" value="${funcionario.id}" />
+            <input type="hidden" name="id" value="${documento.id}" />
             <input type="submit" value="Associar" />
         </form>
     </body>

@@ -13,6 +13,7 @@
         <title>Listar Responsabilidades</title>
     </head>
     <body>
+        <c:import url="../../menu.jsp" ></c:import>
         <h1>Listar Responsabilidades</h1>
         <c:forEach items="${funcionarios}" var="funcionario">
             ${funcionario.nome}

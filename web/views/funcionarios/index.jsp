@@ -13,6 +13,7 @@
         <title>Funcionários</title>
     </head>
     <body>
+        <c:import url="../../menu.jsp" ></c:import>
         <h1>Funcionários</h1>
         <c:if test="${mensagemEstado != null}">
             <div>

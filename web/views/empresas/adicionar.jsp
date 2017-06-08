@@ -6,6 +6,7 @@
         <title>Empresas</title>
     </head>
     <body>
+        <c:import url="../../menu.jsp" ></c:import>
         <h1>Adicionar Nova Empresa</h1>
         <form action="frontController?controller=EmpresasController&method=salvar" method="POST">
             <table>

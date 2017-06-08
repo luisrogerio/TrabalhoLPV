@@ -12,6 +12,7 @@
         <title>Cargos e Salários</title>
     </head>
     <body>
+        <c:import url="../../menu.jsp" ></c:import>
         <h1>Adicionar novo cargo <c:out>${tipo}</c:out></h1>
         <form action="frontController?controller=CargosController&method=salvar" method="POST">
             <table>
