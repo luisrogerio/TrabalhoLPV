@@ -5,7 +5,6 @@
  */
 package controller.action;
 
-import com.sun.xml.internal.ws.util.StringUtils;
 import controller.ActionController;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -62,7 +61,7 @@ public class DocumentosController extends ActionController {
         List<Funcionarios> funcionarios = (List<Funcionarios>) documento.getFuncionariosCollection();
         request.setAttribute("funcionariosResponsaveis", funcionarios);
         if (!funcionarios.isEmpty()) {
-            mensagem = "O documento " + StringUtils.capitalize(documento.getNome()) + " deve pode ser assinado pelo funcionário: ";
+            mensagem = "O documento " + documento.getNome() + " deve pode ser assinado pelo funcionário: ";
         } else {
             mensagem = "Não existe funcionário responsável por assinar este documento.";
         }

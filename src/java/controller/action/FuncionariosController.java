@@ -80,14 +80,11 @@ public class FuncionariosController extends ActionController {
     public void editar(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, ClassNotFoundException, ParseException, InstantiationException, IllegalAccessException, NonexistentEntityException, Exception {
         Funcionarios funcionario;
         Integer id = Integer.parseInt(request.getParameter("id"));
+        Funcionarios funcionarioAntigo = FuncionariosJpaController.getInstance().findFuncionarios(id);
         funcionario = this.getFuncionarioFromView(request, response);
         funcionario.setId(id);
-        if (funcionario.getGerenteId() == null) {
-            funcionario.setFuncionariosCollection(new ArrayList<Funcionarios>());
-        }
-        if (funcionario.getFolhasDePagamentoCollection() == null) {
-            funcionario.setFolhasDePagamentoCollection(new ArrayList<FolhasDePagamento>());
-        }
+        funcionario.setFuncionariosCollection(funcionarioAntigo.getFuncionariosCollection());
+        funcionario.setFolhasDePagamentoCollection(funcionarioAntigo.getFolhasDePagamentoCollection());
         FuncionariosJpaController.getInstance().edit(funcionario);
         request.getRequestDispatcher("frontController?controller=FuncionariosController&method=index").forward(request, response);
     }

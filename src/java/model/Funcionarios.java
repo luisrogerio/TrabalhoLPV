@@ -29,6 +29,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import model.dao.FuncionariosJpaController;
 import model.dao.exceptions.NonexistentEntityException;
+import org.eclipse.persistence.annotations.PrivateOwned;
 
 @Entity
 @Table(name = "funcionarios")
@@ -73,7 +74,7 @@ public abstract class Funcionarios implements Serializable, Observer {
     @JoinColumn(name = "gerente_id", referencedColumnName = "id", nullable = true)
     @ManyToOne
     private Funcionarios gerenteId;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "funcionariosId")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "funcionariosId", targetEntity = FolhasDePagamento.class)
     private Collection<FolhasDePagamento> folhasDePagamentoCollection;
     @Column(name = "novas_folhas")
     private Integer novasFolhas;
@@ -306,12 +307,12 @@ public abstract class Funcionarios implements Serializable, Observer {
     public void setDocumentosCollection(Collection<Documentos> documentosCollection) {
         this.documentosCollection = documentosCollection;
     }
-    
-    public void saveToMemento(){
+
+    public void saveToMemento() {
         FuncionarioMemento.getInstance().setFuncionarioEstado(this.estadoId);
     }
-    
-    public void restoreFromMemento() throws NonexistentEntityException, Exception{
+
+    public void restoreFromMemento() throws NonexistentEntityException, Exception {
         this.estadoId = FuncionarioMemento.getInstance().getFuncionarioEstado();
         FuncionariosJpaController.getInstance().edit(this);
     }
