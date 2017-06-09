@@ -26,8 +26,6 @@ import model.dao.exceptions.NonexistentEntityException;
  */
 public class DocumentosController extends ActionController {
 
-    ArrayList<Documentos> documentosAssociados = new ArrayList();
-
     public void index(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         List<Documentos> listDocumentos = null;
         listDocumentos = DocumentosJpaController.getInstance().findDocumentosEntities();
@@ -57,8 +55,10 @@ public class DocumentosController extends ActionController {
         String mensagem;
         int id = Integer.parseInt(request.getParameter("id"));
         Documentos documento = DocumentosJpaController.getInstance().findDocumentos(id);
-        this.getDocumentosAssociados(documento);
-        request.setAttribute("docAssociados", this.documentosAssociados);
+        String retornoEmLista = "<ul>" + documento.getNome();
+        retornoEmLista = this.getDocumentosAssociados(documento, retornoEmLista);
+
+        request.setAttribute("docAssociados", retornoEmLista);
         List<Funcionarios> funcionarios = (List<Funcionarios>) documento.getFuncionariosCollection();
         request.setAttribute("funcionariosResponsaveis", funcionarios);
         if (!funcionarios.isEmpty()) {
@@ -104,12 +104,17 @@ public class DocumentosController extends ActionController {
 
     }
 
-    private void getDocumentosAssociados(Documentos documento) {
-        Documentos documentoAssociado = documento.getDocumentoId();
-        if (documentoAssociado != null) {
-            documentosAssociados.add(documentoAssociado);
-            this.getDocumentosAssociados(documentoAssociado);
+    private String getDocumentosAssociados(Documentos documento, String retorno) {
+        List<Documentos> documentosAssociados = (List<Documentos>) documento.getDocumentosCollection();
+        if (!documentosAssociados.isEmpty()) {
+            retorno = retorno + "<ul>";
+            for (Documentos docFilho : documentosAssociados) {
+                retorno = retorno + "<li>" + docFilho.getNome() + "</li>";
+                retorno = getDocumentosAssociados(docFilho, retorno);
+            }
+            retorno = retorno + "</ul>";
         }
+        return retorno;
     }
 
 }

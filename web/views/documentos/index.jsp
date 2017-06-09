@@ -24,12 +24,8 @@
                         </c:forEach>
                 </ul>
                 <c:if test="${docAssociados != null}">
-                    <p>Documentos que você deve assinar também:</p>
-                    <ul>
-                        <c:forEach items="${docAssociados}" var="docAssociados">
-                            <li>${docAssociados.nome}</li>
-                            </c:forEach>
-                    </ul>
+                    <p>Lista de documentos que você deve assinar:</p>
+                    ${docAssociados}
                 </c:if>
             </div>
         </c:if>
