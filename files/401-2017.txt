@@ -1,0 +1,22 @@
+Empresa Empresa1
+CNPJ: 123	Folha Mensal: 01-2017
+Trabalhador: Teste	 CPF: 123	 Admissão: 28-05-2017
+Setor: Operacional Setor	 Cargo: Operacional
+Descrição	|Referência	|Proventos	|Descontos
+Salário Bruto	|123 horas	|4920.0	|
+Horas Extras	|55 horas	|R$6765.0	|
+INSS		|20.0 %	|		|R$984.0
+Total de Proventos: R$11685.0
+Total de Descontos: R$984.0
+Líquido ==>R$10701.0
+Empresa Empresa1
+CNPJ: 123	Folha Mensal: 01-2017
+Trabalhador: Teste	 CPF: 123	 Admissão: 28-05-2017
+Setor: Operacional Setor	 Cargo: Operacional
+Descrição	|Referência	|Proventos	|Descontos
+Salário Bruto	|123 horas	|4920.0	|
+Horas Extras	|55 horas	|R$6765.0	|
+INSS		|20.0 %	|		|R$984.0
+Total de Proventos: R$11685.0
+Total de Descontos: R$984.0
+Líquido ==>R$10701.0

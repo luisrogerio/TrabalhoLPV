@@ -1,0 +1,11 @@
+Empresa Empresa1
+CNPJ: 123	Folha Mensal: 01-2017
+Trabalhador: Func1	 CPF: 123	 Admissão: 09-06-2017
+Setor: Operacional Setor	 Cargo: Operacional
+Descrição	|Referência	|Proventos	|Descontos
+Salário Bruto	|4 horas	|160.0	|
+Horas Extras	|50 horas	|R$200.0	|
+INSS		|20.0 %	|		|R$32.0
+Total de Proventos: R$360.0
+Total de Descontos: R$32.0
+Líquido ==>R$328.0
